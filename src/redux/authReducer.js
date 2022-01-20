@@ -8,7 +8,6 @@ const defaultState = {
 }
 
 export const authReducer = (state = {...defaultState}, action) => {
-    console.log("LOGOUT-SUCCESS: " ,action)
     if (action.type === "logout-success") {
       return {
         ...state,

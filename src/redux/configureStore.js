@@ -10,7 +10,7 @@ const initialState = {
 };
 
 const configureStore = () => {
-    return createStore(authReducer, initialState);
+    return createStore(authReducer, initialState,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 }
 
 export default configureStore;

@@ -13,13 +13,10 @@ import {connect} from "react-redux";
 import { logoutSuccessFn } from "../redux/authAction";
 
 const NavBar = (props) => {
-  console.log("PROPS NAVBAR: ",props)
-  const {isLoggin , username , dispatch} = props;
+  const {isLoggin , username , onLogoutSuccess } = props;
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const onClickToLogout = () => {
-    dispatch(logoutSuccessFn());
-  }
+  
   
   let Links = (
     <div>
@@ -52,7 +49,7 @@ const NavBar = (props) => {
         <Button color="inherit" onClick={() => navigate(`user/${username}`)}>
           {username}
         </Button>
-        <Button color="inherit" onClick={onClickToLogout}>
+        <Button color="inherit" onClick={ onLogoutSuccess }>
           {t("Logout")}
         </Button>
       </React.Fragment>
@@ -89,4 +86,10 @@ const mapStateToProps = (state) => {
     username: state.username
   }
 }
-export default connect(mapStateToProps)(NavBar);
+
+const mapDispatchToProps = (dispatch) => {
+  return { 
+    onLogoutSuccess: () => dispatch( logoutSuccessFn() )
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
