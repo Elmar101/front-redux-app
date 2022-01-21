@@ -8,7 +8,17 @@ const defaultState = {
 }
 
 export const authReducer = (state = {...defaultState}, action) => {
-    if (action.type === "logout-success") {
+    if (action.type === "login-success") {
+        return {
+          ...state,
+          username: action.payload.username,
+          displayname: action.payload.displayname,
+          password: action.payload.password,
+          image: action.payload.image,
+          isLoggin: true,
+        };
+    }
+    else if (action.type === "logout-success") {
       return {
         ...state,
         username: null,
@@ -18,6 +28,6 @@ export const authReducer = (state = {...defaultState}, action) => {
         isLoggin: false,
       };
     }
-  
+    
     return state;
   };

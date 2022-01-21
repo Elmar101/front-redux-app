@@ -10,7 +10,8 @@ import { loginAuth } from "../../api/apiCalls";
 import {withApiProgress} from "../../shared/ApiProgress";
 import { XButton } from "../../x-lib/components/XButton";
 import { useNavigate } from 'react-router-dom';
-/* import { AuthenticationContext } from './../../shared/AuthenticationContext'; */
+import {connect} from "react-redux";
+import { loginSuccessFn } from './../../redux/authAction';
 const initialState = {
   username: "",
   password: "",
@@ -18,12 +19,11 @@ const initialState = {
   showPassword: false,
 };
 const LoginPage = (props) => {
-  const { pendingApiCall } = props;
+  const { pendingApiCall, onLoginSuccess } = props;
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [state, setState] = useState(initialState);
-  /* const {onLoginSuccess} = useContext(AuthenticationContext); */
-  const onLoginSuccess = () =>{};
+  
   const buttonDisabled = !(state.password && state.username);
 
   const handleChange = (prop) => (event) => {
@@ -112,4 +112,11 @@ const LoginPage = (props) => {
   );
 };
 
-export default withApiProgress(LoginPage, "api/1.0/auth");
+const LogginWithApiProgress = withApiProgress(LoginPage, "api/1.0/auth");
+
+const mapDispatchToProps = ( dispatch ) => {
+  return {
+    onLoginSuccess: (authUser)=> dispatch( loginSuccessFn(authUser) ) 
+  }
+}
+export default connect( null , mapDispatchToProps)(LogginWithApiProgress);
