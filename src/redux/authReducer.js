@@ -1,3 +1,4 @@
+import { ACTION_TYPE } from "./Constans";
 
 const defaultState = {
     username: null,
@@ -8,7 +9,7 @@ const defaultState = {
 }
 
 export const authReducer = (state = {...defaultState}, action) => {
-    if (action.type === "login-success") {
+    if (action.type === ACTION_TYPE.LOGIN_SUCCESS) {
         return {
           ...state,
           username: action.payload.username,
@@ -18,13 +19,13 @@ export const authReducer = (state = {...defaultState}, action) => {
           isLoggin: true,
         };
     }
-    else if (action.type === "logout-success") {
+    else if (action.type === ACTION_TYPE.LOGOUT_SUCCESS) {
       return {
         ...state,
-        username: null,
-        displayname: null,
-        password: null,
-        image: null,
+        username: action.payload.username,
+        displayname: action.payload.displayname,
+        password: action.payload.password,
+        image: action.payload.image,
         isLoggin: false,
       };
     }

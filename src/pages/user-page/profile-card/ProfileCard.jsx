@@ -1,23 +1,19 @@
-import React,{useContext} from 'react'
-import { useParams } from 'react-router-dom';
-/* import { AuthenticationContext } from './../../../shared/AuthenticationContext'; */
-
+import React from "react";
+import { useParams } from "react-router-dom";
+import {connect} from "react-redux";
 const ProfileCard = (props) => {
-    /* const { state } = useContext(AuthenticationContext); */
+  const {logginUserName} = props;
+  const { username } = useParams();
 
-    const {username} = useParams();
-    
-    const logginUserName = "";//state.username;
-   
-    let message = (<i> WE CAN NOT EDIT</i>)
-    if(username === logginUserName){
-        message = (<i> WE CAN EDITS</i>)
+  let message = <i> WE CAN NOT EDIT</i>;
+  if (username === logginUserName) {
+    message = <i> WE CAN EDITS</i>;
+  }
+  return <div>{message}</div>;
+};
+const mapStateToProps = (state) => {
+    return {
+        logginUserName: state.username
     }
-    return (
-        <div>
-          {message}
-        </div>
-    )
-}
-
-export default ProfileCard;
+} 
+export default connect(mapStateToProps)(ProfileCard);

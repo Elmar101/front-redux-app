@@ -1,4 +1,4 @@
-import React  from "react";
+import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -9,15 +9,24 @@ import Button from "@mui/material/Button";
 import logo from "../assets/images/hoaxify.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import { logoutSuccessFn } from "../redux/authAction";
 
 const NavBar = (props) => {
-  const {isLoggin , username , onLogoutSuccess } = props;
+  const { isLoggin, username, onLogoutSuccess } = props;
   const navigate = useNavigate();
   const { t } = useTranslation();
-  
-  
+
+  const onLogoutSuccessClick = () => {
+    onLogoutSuccess({
+      username: null,
+      displayname: null,
+      password: null,
+      image: null,
+      isLoggin: false,
+    });
+  };
+
   let Links = (
     <div>
       <Link
@@ -49,7 +58,7 @@ const NavBar = (props) => {
         <Button color="inherit" onClick={() => navigate(`user/${username}`)}>
           {username}
         </Button>
-        <Button color="inherit" onClick={ onLogoutSuccess }>
+        <Button color="inherit" onClick={onLogoutSuccessClick}>
           {t("Logout")}
         </Button>
       </React.Fragment>
@@ -83,13 +92,13 @@ const NavBar = (props) => {
 const mapStateToProps = (state) => {
   return {
     isLoggin: state.isLoggin,
-    username: state.username
-  }
-}
+    username: state.username,
+  };
+};
 
 const mapDispatchToProps = (dispatch) => {
-  return { 
-    onLogoutSuccess: () => dispatch( logoutSuccessFn() )
-  }
-}
+  return {
+    onLogoutSuccess: (authUser) => dispatch(logoutSuccessFn(authUser)),
+  };
+};
 export default connect(mapStateToProps, mapDispatchToProps)(NavBar);

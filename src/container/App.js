@@ -1,15 +1,14 @@
-import React, { useState, useContext } from "react";
+import React from "react";
 import UserSignupPage from "../pages/signUpPage/UserSignupPage";
 import LoginPage from "../pages/loginPage/LoginPage";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "./../pages/home-page/HomePage";
 import UserPage from "./../pages/user-page/UserPage";
 import NavBar from "./../components/NavBar";
-/* import { AuthenticationContext } from "../shared/AuthenticationContext"; */
+import {connect} from "react-redux";
 
-function App() {
-  /* const { state } = useContext(AuthenticationContext); */
-  const isLoggin = false;
+function App(props) {
+  const {isLoggin} = props;
   return (
     <BrowserRouter>
       <NavBar />
@@ -24,16 +23,10 @@ function App() {
     </BrowserRouter>
   );
 }
+const mapStateToProps = ( state ) => {
+  return {
+    isLoggin: state.isLoggin
+  }
+}
+export default connect(mapStateToProps)(App);
 
-export default App;
-
-/*/
-<div className="row">
-      <div className="col">
-          <UserSignupPage />
-      </div>
-      <div className="col">
-          <LoginPage />
-      </div>
-    </div>
-/*/
