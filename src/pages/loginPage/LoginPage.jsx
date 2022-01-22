@@ -6,12 +6,12 @@ import Alert from "@mui/material/Alert";
 import { useTranslation } from "react-i18next";
 import XInputPassword from "../../x-lib/components/XInputPassword";
 import LanguageSelector from "../../components/LanguageSelector";
-import { loginAuth } from "../../api/apiCalls";
 import {withApiProgress} from "../../shared/ApiProgress";
 import { XButton } from "../../x-lib/components/XButton";
 import { useNavigate } from 'react-router-dom';
 import {connect} from "react-redux";
-import { loginSuccessFn } from './../../redux/authAction';
+import { loginSuccessFnHandler } from "../../redux/authAction";
+//import { loginSuccessFn, loginSuccessFnHandler } from './../../redux/authAction';
 const initialState = {
   username: "",
   password: "",
@@ -19,7 +19,7 @@ const initialState = {
   showPassword: false,
 };
 const LoginPage = (props) => {
-  const { pendingApiCall, onLoginSuccess } = props;
+  const { pendingApiCall, dispatch /* onLoginSuccess */ } = props;
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [state, setState] = useState(initialState);
@@ -46,21 +46,15 @@ const LoginPage = (props) => {
     event.preventDefault();
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
     setState({ ...state, error: null });
-    loginAuth({ username: state.username, password: state.password })
-    .then(response => {
-      onLoginSuccess({
-        username: response.data.username,
-        displayname: response.data.displayname,
-        image: response.data.image,
-        password: state.password
-      })
+    try {
+      await dispatch( loginSuccessFnHandler({ username: state.username, password: state.password }) );
       navigate("/");
-    }).catch(
-      (err) => setState({ ...state, error: err.response.data.message })
-    );
+    }catch(err){
+      setState({ ...state, error: err.response.data.message })
+    }
   };
 
   return (
@@ -114,9 +108,22 @@ const LoginPage = (props) => {
 
 const LogginWithApiProgress = withApiProgress(LoginPage, "api/1.0/auth");
 
-const mapDispatchToProps = ( dispatch ) => {
+/* const mapDispatchToProps = ( dispatch ) => {
   return {
     onLoginSuccess: (authUser)=> dispatch( loginSuccessFn(authUser) ) 
   }
-}
-export default connect( null , mapDispatchToProps)(LogginWithApiProgress);
+} */
+export default connect( /* null , mapDispatchToProps */)(LogginWithApiProgress);
+
+
+
+ /* loginAuth({ username: state.username, password: state.password })
+    .then(response => {
+      dispatch({
+        username: response.data.username,
+        displayname: response.data.displayname,
+        image: response.data.image,
+        password: state.password
+      })
+      navigate("/");
+    }) .*/

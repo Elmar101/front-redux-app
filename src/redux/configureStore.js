@@ -1,35 +1,20 @@
-import { createStore } from "redux";
+import { createStore, applyMiddleware,compose } from "redux";
 import { authReducer } from "./authReducer";
+import thunk from "redux-thunk";
 import {
   saveDataToStorage,
-  getDataFromStorage,
+  storageData,
 } from "./../theme/utils/storage-utilts";
 
 const configureStore = () => {
-  const storageData = getDataFromStorage("global-state");
-
-  let initialState = {
-    username: null,
-    displayname: null,
-    password: null,
-    image: null,
-    isLoggin: false,
-  };
-
-  if (storageData) {
-      try {
-        initialState = JSON.parse(storageData);
-      }
-      catch(err){}
-  }
-
+  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   const store = createStore(
     authReducer,
-    initialState,
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    storageData("global-state"),
+    composeEnhancers(applyMiddleware(thunk))
   );
   
-  store.subscribe((st) =>
+  store.subscribe(() =>
     saveDataToStorage("global-state", JSON.stringify(store.getState()))
   );
   

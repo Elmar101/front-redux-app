@@ -1,4 +1,7 @@
+import { loginAuth } from "../api/apiCalls";
 import { ACTION_TYPE } from "./Constans";
+import { signUp } from "./../api/apiCalls";
+
 export const loginSuccessFn = (authUser) => {
   return {
     type: ACTION_TYPE.LOGIN_SUCCESS,
@@ -19,7 +22,48 @@ export const logoutSuccessFn = (authUser) => {
       displayname: authUser.displayname,
       password: authUser.password,
       image: authUser.image,
-      isLoggin: false,
+      isLoggin: authUser.isLoggin,
     },
   };
 };
+
+export const loginSuccessFnHandler = (credentials) => {
+  return async (dispatch) => {
+    const response = await loginAuth(credentials);
+    dispatch(
+      loginSuccessFn({
+        username: response.data.username,
+        displayname: response.data.displayname,
+        password: response.data.password,
+        image: response.data.image,
+        isLoggin: false,
+        // password: credentials.password -> response.data.password gelmezse
+      })
+    );
+    return response;
+  };
+};
+
+export const signUpSuccessFn = (body) => {
+  return async (dispatch) => {
+    const response = await signUp(body);
+        dispatch(
+          loginSuccessFnHandler({
+            username: body.username,
+            displayname: body.displayname,
+            password: body.password
+          })
+        );
+        return response;
+  };
+};
+
+/*/
+Thunk diye bir Redux middleware özelliği kullanıyoruz. Ve burada return ettiğimiz değer,
+bir fonksiyon olursa, thunk devreye girip, bu fonksiyonu çağırıyor. 
+Ve parametre olarak "dispatch" i vererek bu fonksiyonu çağırıyor.
+O nedenle, loginHandler içinde döndüğümüz fonksiyona dispatch parametresini ekliyoruz.
+----------------------------------------------------------------------------------------
+Bu loginHandler'ın döndüğü fonksiyon, redux tarafından çağırılıyor ve 
+redux bunu yaparken parametre olarak, kendi dispatch fonksiyonunu parametre olarak veriyor.
+/*/

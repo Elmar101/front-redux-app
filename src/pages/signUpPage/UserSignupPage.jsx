@@ -3,15 +3,18 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import XInput from "../../x-lib/components/XInput";
 import XInputPassword from "../../x-lib/components/XInputPassword";
-import { signUp } from "../../api/apiCalls";
 import { useTranslation } from "react-i18next";
 import LanguageSelector from "../../components/LanguageSelector";
 import { XButton } from "../../x-lib/components/XButton";
-import {withApiProgress} from "../../shared/ApiProgress";
+import { connect } from "react-redux";
+import { signUpSuccessFn } from "../../redux/authAction";
+import { withApiProgress } from "../../shared/ApiProgress";
+import { useNavigate } from 'react-router-dom';
 const UserSignupPage = (props) => {
-  const {pendingApiCall} = props;
+  const navigate = useNavigate();
+  const { pendingApiCall, dispatch } = props;
   const { t } = useTranslation();
-  const [state, setstate] = React.useState({
+  const [state, setState] = React.useState({
     username: "",
     displayname: "",
     password: "",
@@ -29,26 +32,26 @@ const UserSignupPage = (props) => {
     let { value } = event.target;
     if (prop === "password" || prop === "passwordRepeat") {
       if (prop === "password" && value !== state.passwordRepeat) {
-        setstate({
+        setState({
           ...state,
           [prop]: value,
           errors: { ...state.errors, passwordRepeat: t("Password mismatch") },
         });
       } else if (prop === "passwordRepeat" && value !== state.password) {
-        setstate({
+        setState({
           ...state,
           [prop]: value,
           errors: { ...state.errors, passwordRepeat: t("Password mismatch") },
         });
       } else {
-        setstate({
+        setState({
           ...state,
           [prop]: value,
           errors: { ...state.errors, passwordRepeat: undefined },
         });
       }
     } else
-      setstate({
+      setState({
         ...state,
         [prop]: value,
         errors: { ...state.errors, [prop]: undefined },
@@ -56,7 +59,7 @@ const UserSignupPage = (props) => {
   };
 
   const handleClickShowPassword = (prop) => () => {
-    setstate({
+    setState({
       ...state,
       showPassword: !state.showPassword,
     });
@@ -66,25 +69,26 @@ const UserSignupPage = (props) => {
     event.preventDefault();
   };
 
-  const onSignUp = (e) => {
+  const onSignUp = async (e) => {
     e.preventDefault();
     const { username, displayname, password } = state;
     const body = { username, displayname, password };
-    signUp(body)
-      .then((response) => {})
-      .catch((error) => {
-        if (Object.keys(error).length > 0) {
-          setstate({
-            ...state,
-            errors: {
-              ...state.errors,
-              username: error.response.data.validationErrors.username,
-              displayname: error.response.data.validationErrors.displayname,
-              password: error.response.data.validationErrors.password,
-            },
-          });
-        }
-      });
+    try {
+      await dispatch(signUpSuccessFn(body));
+      navigate("/");
+    } catch (error) {
+      if (Object.keys(error).length > 0) {
+        setState({
+          ...state,
+          errors: {
+            ...state.errors,
+            username: error.response.data.validationErrors.username,
+            displayname: error.response.data.validationErrors.displayname,
+            password: error.response.data.validationErrors.password,
+          },
+        });
+      }
+    }
   };
   return (
     <React.Fragment>
@@ -137,9 +141,9 @@ const UserSignupPage = (props) => {
                 type="submit"
                 variant="contained"
                 color="primary"
-                text = {t("Sign Up")}
+                text={t("Sign Up")}
                 disabled={pendingApiCall}
-                pendingApiCall = {pendingApiCall}
+                pendingApiCall={pendingApiCall}
               />
             </Container>
 
@@ -152,5 +156,8 @@ const UserSignupPage = (props) => {
     </React.Fragment>
   );
 };
-
-export default withApiProgress(UserSignupPage, "api/1.0/users");
+const UserSignupPageWithApiProgress = withApiProgress(
+  UserSignupPage,
+  "api/1.0/users"
+);
+export default connect()(UserSignupPageWithApiProgress);
