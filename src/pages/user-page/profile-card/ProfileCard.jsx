@@ -12,8 +12,8 @@ const ProfileCard = (props) => {
   return <div>{message}</div>;
 };
 const mapStateToProps = (state) => {
-    return {
-        logginUserName: state.username
-    }
+  return {
+    logginUserName: state.username
+  }
 } 
 export default connect(mapStateToProps)(ProfileCard);

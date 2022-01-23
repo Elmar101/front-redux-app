@@ -1,4 +1,4 @@
-export const saveDataToStorage = (key, value) => {
+export const setDataToStorage = (key, value) => {
     sessionStorage.setItem(key, value);
 }
 

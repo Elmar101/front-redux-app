@@ -37,7 +37,6 @@ export const loginSuccessFnHandler = (credentials) => {
         password: response.data.password,
         image: response.data.image,
         isLoggin: false,
-        // password: credentials.password -> response.data.password gelmezse
       })
     );
     return response;

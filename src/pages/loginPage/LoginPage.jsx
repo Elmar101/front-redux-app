@@ -110,7 +110,7 @@ const LogginWithApiProgress = withApiProgress(LoginPage, "api/1.0/auth");
 
 /* const mapDispatchToProps = ( dispatch ) => {
   return {
-    onLoginSuccess: (authUser)=> dispatch( loginSuccessFn(authUser) ) 
+    onLoginSuccess: (authUser) => dispatch( loginSuccessFn(authUser) ) 
   }
 } */
 export default connect( /* null , mapDispatchToProps */)(LogginWithApiProgress);

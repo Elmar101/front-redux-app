@@ -35,7 +35,7 @@ const UserSignupPage = (props) => {
         setState({
           ...state,
           [prop]: value,
-          errors: { ...state.errors, passwordRepeat: t("Password mismatch") },
+          errors: { ...state.errors, passwordRepeat: t("Password mismatch"), [prop]: undefined },
         });
       } else if (prop === "passwordRepeat" && value !== state.password) {
         setState({
@@ -47,7 +47,7 @@ const UserSignupPage = (props) => {
         setState({
           ...state,
           [prop]: value,
-          errors: { ...state.errors, passwordRepeat: undefined },
+          errors: { ...state.errors,  [prop]: undefined  },
         });
       }
     } else
@@ -156,8 +156,6 @@ const UserSignupPage = (props) => {
     </React.Fragment>
   );
 };
-const UserSignupPageWithApiProgress = withApiProgress(
-  UserSignupPage,
-  "api/1.0/users"
-);
-export default connect()(UserSignupPageWithApiProgress);
+const UserSignupPageWithApiProgressForSignUpRequest = withApiProgress( UserSignupPage, "api/1.0/users");
+const UserSignupPageWithApiProgressForAuthRequest = withApiProgress( UserSignupPageWithApiProgressForSignUpRequest, "api/1.0/auth");
+export default connect()(UserSignupPageWithApiProgressForAuthRequest);
