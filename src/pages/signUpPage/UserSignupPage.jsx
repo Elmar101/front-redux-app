@@ -1,4 +1,4 @@
-import * as React from "react";
+import React,{useState} from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import XInput from "../../x-lib/components/XInput";
@@ -6,56 +6,45 @@ import XInputPassword from "../../x-lib/components/XInputPassword";
 import { useTranslation } from "react-i18next";
 import LanguageSelector from "../../components/LanguageSelector";
 import { XButton } from "../../x-lib/components/XButton";
-import { connect } from "react-redux";
+/* import { connect } from "react-redux"; */
+import { useDispatch } from "react-redux";
 import { signUpSuccessFn } from "../../redux/authAction";
-import { withApiProgress } from "../../shared/ApiProgress";
+/* import { withApiProgress } from "../../shared/ApiProgress"; */
 import { useNavigate } from 'react-router-dom';
-const UserSignupPage = (props) => {
+import { useApiProgress } from './../../shared/ApiProgress';
+
+const initialState = { username: "", displayname: "", password: "", passwordRepeat: "", showPassword: false };
+const initialErrors = { username: "", displayname: "", password: "", passwordRepeat: "" };
+
+const UserSignupPage = () => {
+  const pendingApiCallSignUp  = useApiProgress({ apiPath: "api/1.0/users" }); 
+  const pendingApiCallLogin =  useApiProgress({apiPath: "api/1.0/auth"});
+  const pendingApiCall = pendingApiCallSignUp || pendingApiCallLogin;
+  
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { pendingApiCall, dispatch } = props;
   const { t } = useTranslation();
-  const [state, setState] = React.useState({
-    username: "",
-    displayname: "",
-    password: "",
-    passwordRepeat: "",
-    showPassword: false,
-    errors: {
-      username: "",
-      displayname: "",
-      password: "",
-      passwordRepeat: "",
-    },
-  });
+  const [state, setState] = useState(initialState);
+  const [errors, setErrors] = useState(initialErrors);
 
   const handleChange = (prop) => (event) => {
     let { value } = event.target;
     if (prop === "password" || prop === "passwordRepeat") {
       if (prop === "password" && value !== state.passwordRepeat) {
-        setState({
-          ...state,
-          [prop]: value,
-          errors: { ...state.errors, passwordRepeat: t("Password mismatch"), [prop]: undefined },
-        });
+        setState({ ...state, [prop]: value});
+        setErrors({ ...errors, passwordRepeat: t("Password mismatch"), [prop]: undefined });
       } else if (prop === "passwordRepeat" && value !== state.password) {
-        setState({
-          ...state,
-          [prop]: value,
-          errors: { ...state.errors, passwordRepeat: t("Password mismatch") },
-        });
+        setState({ ...state, [prop]: value});
+        setErrors({ ...errors, passwordRepeat: t("Password mismatch") });
       } else {
-        setState({
-          ...state,
-          [prop]: value,
-          errors: { ...state.errors,  [prop]: undefined  },
-        });
+        setState({...state, [prop]: value });
+        setErrors({ ...errors,  [prop]: undefined });
       }
-    } else
-      setState({
-        ...state,
-        [prop]: value,
-        errors: { ...state.errors, [prop]: undefined },
-      });
+    } 
+    else {
+      setState({ ...state, [prop]: value });
+      setErrors({ ...errors, [prop]: undefined });
+    }
   };
 
   const handleClickShowPassword = (prop) => () => {
@@ -78,14 +67,11 @@ const UserSignupPage = (props) => {
       navigate("/");
     } catch (error) {
       if (Object.keys(error).length > 0) {
-        setState({
-          ...state,
-          errors: {
-            ...state.errors,
+        setErrors({
+          ...errors,
             username: error.response.data.validationErrors.username,
             displayname: error.response.data.validationErrors.displayname,
-            password: error.response.data.validationErrors.password,
-          },
+            password: error.response.data.validationErrors.password
         });
       }
     }
@@ -99,7 +85,7 @@ const UserSignupPage = (props) => {
               <XInput
                 label={t("Username")}
                 value={state.username}
-                error={state.errors.username}
+                error={errors.username}
                 onChange={handleChange("username")}
               />
             </Container>
@@ -107,7 +93,7 @@ const UserSignupPage = (props) => {
               <XInput
                 label={t("Display Name")}
                 value={state.displayname}
-                error={state.errors.displayname}
+                error={errors.displayname}
                 onChange={handleChange("displayname")}
               />
             </Container>
@@ -116,7 +102,7 @@ const UserSignupPage = (props) => {
               <XInputPassword
                 type={state.showPassword}
                 label={t("Password")}
-                error={state.errors.password}
+                error={errors.password}
                 value={state.password}
                 onChange={handleChange("password")}
                 onMouseDown={handleMouseDownPassword}
@@ -128,7 +114,7 @@ const UserSignupPage = (props) => {
               <XInputPassword
                 type={state.showPassword}
                 label={t("Password Repeat")}
-                error={state.errors.passwordRepeat}
+                error={errors.passwordRepeat}
                 value={state.passwordRepeat}
                 onChange={handleChange("passwordRepeat")}
                 onMouseDown={handleMouseDownPassword}
@@ -156,6 +142,7 @@ const UserSignupPage = (props) => {
     </React.Fragment>
   );
 };
-const UserSignupPageWithApiProgressForSignUpRequest = withApiProgress( UserSignupPage, "api/1.0/users");
+export default UserSignupPage;
+/* const UserSignupPageWithApiProgressForSignUpRequest = withApiProgress( UserSignupPage, "api/1.0/users");
 const UserSignupPageWithApiProgressForAuthRequest = withApiProgress( UserSignupPageWithApiProgressForSignUpRequest, "api/1.0/auth");
-export default connect()(UserSignupPageWithApiProgressForAuthRequest);
+export default UserSignupPageWithApiProgressForAuthRequest; */

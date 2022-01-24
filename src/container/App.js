@@ -5,10 +5,10 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "./../pages/home-page/HomePage";
 import UserPage from "./../pages/user-page/UserPage";
 import NavBar from "./../components/NavBar";
-import {connect} from "react-redux";
+import { useSelector } from 'react-redux';
 
-function App(props) {
-  const {isLoggin} = props;
+function App() {
+  const {isLoggin} = useSelector(state=> ({isLoggin: state.isLoggin}));
   return (
     <BrowserRouter>
       <NavBar />
@@ -23,10 +23,5 @@ function App(props) {
     </BrowserRouter>
   );
 }
-const mapStateToProps = ( state ) => {
-  return {
-    isLoggin: state.isLoggin
-  }
-}
-export default connect(mapStateToProps)(App);
+export default App;
 

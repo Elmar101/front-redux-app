@@ -1,8 +1,12 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import {connect} from "react-redux";
-const ProfileCard = (props) => {
-  const {logginUserName} = props;
+import { useSelector } from 'react-redux';
+const ProfileCard = () => {
+  const {logginUserName} = useSelector(state => {
+    return {
+      logginUserName: state.username
+    }
+  })
   const { username } = useParams();
 
   let message = <i> WE CAN NOT EDIT</i>;
@@ -11,9 +15,4 @@ const ProfileCard = (props) => {
   }
   return <div>{message}</div>;
 };
-const mapStateToProps = (state) => {
-  return {
-    logginUserName: state.username
-  }
-} 
-export default connect(mapStateToProps)(ProfileCard);
+export default ProfileCard;

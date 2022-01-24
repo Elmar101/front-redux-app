@@ -6,20 +6,23 @@ import Alert from "@mui/material/Alert";
 import { useTranslation } from "react-i18next";
 import XInputPassword from "../../x-lib/components/XInputPassword";
 import LanguageSelector from "../../components/LanguageSelector";
-import {withApiProgress} from "../../shared/ApiProgress";
+/* import {withApiProgress} from "../../shared/ApiProgress"; */
 import { XButton } from "../../x-lib/components/XButton";
 import { useNavigate } from 'react-router-dom';
-import {connect} from "react-redux";
+/* import {connect} from "react-redux"; */
+import { useDispatch } from "react-redux";
 import { loginSuccessFnHandler } from "../../redux/authAction";
-//import { loginSuccessFn, loginSuccessFnHandler } from './../../redux/authAction';
+import { useApiProgress } from './../../shared/ApiProgress';
 const initialState = {
   username: "",
   password: "",
   error: "",
   showPassword: false,
 };
-const LoginPage = (props) => {
-  const { pendingApiCall, dispatch /* onLoginSuccess */ } = props;
+const LoginPage = () => {
+  const pendingApiCall = useApiProgress({apiPath: "api/1.0/auth"});
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [state, setState] = useState(initialState);
@@ -106,14 +109,19 @@ const LoginPage = (props) => {
   );
 };
 
-const LogginWithApiProgress = withApiProgress(LoginPage, "api/1.0/auth");
+
+export default LoginPage;
+
+/* const LogginWithApiProgress = withApiProgress(LoginPage, "api/1.0/auth");
+export default LogginWithApiProgress; */
+
 
 /* const mapDispatchToProps = ( dispatch ) => {
   return {
     onLoginSuccess: (authUser) => dispatch( loginSuccessFn(authUser) ) 
   }
-} */
-export default connect( /* null , mapDispatchToProps */)(LogginWithApiProgress);
+} 
+export default connect(  null , mapDispatchToProps )(LogginWithApiProgress); */
 
 
 

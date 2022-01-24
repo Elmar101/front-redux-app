@@ -1,6 +1,56 @@
 import React,{useState,useEffect} from "react";
 import axios from "axios";
-const getDisplayName = (WrapperComponent)=> {
+/* const getDisplayName = (WrapperComponent)=> {
+  return WrapperComponent.displayName || WrapperComponent.name || "Component";
+}
+WrrapperComponent.displayName = `ApiProgres(${getDisplayName(Component)})`; */
+export const useApiProgress = (props) => {
+  const {apiPath} = props;
+  const [pendingApiCall , setPendingApiCall ] = useState(false);
+
+  useEffect(()=>{
+    let requestInterceptorReject;
+    let responseInterceptorReject; 
+
+    const updateApiCallFor = (url, isBoolean) => {
+      if (url === apiPath) {
+        setPendingApiCall( isBoolean);
+      }
+    };
+    const registerInterceptors = () => {
+      requestInterceptorReject = axios.interceptors.request.use((request) => {
+        updateApiCallFor(request.url, true);
+        return request;
+      });
+
+      responseInterceptorReject = axios.interceptors.response.use(
+        (response) => {
+          updateApiCallFor(response.config.url, false);
+          return response;
+        },
+        (error) => {
+          updateApiCallFor(error.config.url, false);
+          throw error;
+        }
+      );
+    }
+
+    const unRegisterInterceptors = () => {
+      axios.interceptors.request.eject(requestInterceptorReject);
+      axios.interceptors.response.eject(responseInterceptorReject);
+    };
+
+    registerInterceptors ();
+
+    return () => unRegisterInterceptors();
+  })
+
+  return pendingApiCall;
+}
+
+
+
+/* const getDisplayName = (WrapperComponent)=> {
   return WrapperComponent.displayName || WrapperComponent.name || "Component";
 }
 export const withApiProgress = (Component, path) => {
@@ -8,8 +58,8 @@ export const withApiProgress = (Component, path) => {
   const WrrapperComponent = (props) => {
     WrrapperComponent.displayName = `ApiProgres(${getDisplayName(Component)})`;
 
-    const [state, setState] = useState({pendingApiCall: false}); 
-    
+    const [state, setState] = useState({pendingApiCall: false});
+
     const updateApiCallFor = (url, isBoolean) => {
       if (url === path) {
         setState({...state, pendingApiCall: isBoolean});
@@ -38,12 +88,12 @@ export const withApiProgress = (Component, path) => {
         axios.interceptors.response.eject(responseInterceptorReject);
       };
     })
-    return <Component  {...props} pendingApiCall = {state.pendingApiCall || props.pendingApiCall}/>;
+    return <Component pendingApiCall = {state.pendingApiCall} {...props}/>;
   };
   
   return WrrapperComponent;
 };
-
+ */
 
 
 
@@ -87,7 +137,7 @@ export  const withApiProgress = (WrapperComponent, path) => {
 
     render() {
       const { pendingApiCall } = this.state;
-      return <WrapperComponent {...this.props} pendingApiCall = {pendingApiCall || this.props.pendingApiCall}  />;
+      return <WrapperComponent pendingApiCall = {pendingApiCall} {...this.props} />;
     }
   };
 } */

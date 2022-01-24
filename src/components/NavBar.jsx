@@ -9,22 +9,23 @@ import Button from "@mui/material/Button";
 import logo from "../assets/images/hoaxify.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logoutSuccessFn } from "../redux/authAction";
 
 const NavBar = (props) => {
-  const { isLoggin, username, onLogoutSuccess } = props;
+  const {username, isLoggin} = useSelector(state => ({username: state.username, isLoggin: state.isLoggin}));
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
   const onLogoutSuccessClick = () => {
-    onLogoutSuccess({
+    dispatch(logoutSuccessFn({
       username: null,
       displayname: null,
       password: null,
       image: null,
       isLoggin: false,
-    });
+    }));
   };
 
   let Links = (
@@ -89,16 +90,4 @@ const NavBar = (props) => {
     </Box>
   );
 };
-const mapStateToProps = (state) => {
-  return {
-    isLoggin: state.isLoggin,
-    username: state.username,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onLogoutSuccess: (authUser) => dispatch(logoutSuccessFn(authUser)),
-  };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
+export default NavBar;

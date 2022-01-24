@@ -1,4 +1,4 @@
 export const ACTION_TYPE = {
-   LOGIN_SUCCESS : "logout-success",
-   LOGOUT_SUCCESS : "login-success"
+   LOGIN_SUCCESS : "login-success",
+   LOGOUT_SUCCESS : "logout-success",
 }

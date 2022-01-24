@@ -1,0 +1,216 @@
+Redux - Global State-ni idare Etməyimizi Sağlayan JavaScript KitabXanasıdır !!!
+
+                    Niyə Redux İstifadə Etməliyik ? 
+{
+    Düşünsəniz bir state - də tuttuğunuz dataları başka sayfalarda istifadə etmək isdəyirsiz. 
+    Dataya erişmek üçün sayfalar arası geçiş etmək zorunda qalacaqsiz.
+    React-da Props ve State işləmləri - Angularda İnput Output Dekaratorlari
+}
+
+                    Bəs Redux Nə Edir ?
+{
+    Redux State - dəki Datani store adı verilen Bir yerde saxlar
+    store =  createStore()
+    -------------------------------------------------| ACTION |--------------------------------------------------------
+
+    action => state güncəllənəcəği zaman, action tərəfindən tətiklənməsi gərəkir. 
+              Neyi güncellemesi gərəkdiğini adlandırırken “type” ile belirtmemiz gerekirken,
+              değiştirmesi gereken datani payload’larla taşır.
+
+    action = {
+        type = " Emeliyatin Adi "
+        payload: {
+            prop1: "a",
+            prop2: "b"
+        }
+    }
+
+    ---------------------------------------------------| STORE |------------------------------------------------------
+    
+    store => redux kütüphanesi ile yaratacağımız datalari tutulacağı yer diyebilirik.
+             qısaca databaza die bilerik. 
+             Projemizde tek bir store olacak ve statelerimiz store içinde tutulacak
+
+     store =  createStore()
+
+    ---------------------------------------------------| REDUCER |------------------------------------------------------
+
+    reducer => action tarafından store’a iletilen veriyi alıp uygulama içerisindeki sayfalarda(UI) kullanmamızı sağlar.
+
+    reducer = (state = {...initialState}, action ) => {
+        if(action.type = "Emeliyatin Adi"){
+            return {
+                ...state,
+                properity1: action.payload.prop1
+                properity2: action.payload.prop2
+            }
+
+            return state 
+        }
+    }
+
+    ------------------------------------------------- | PROVIDER | --------------------------------------------------
+
+    provider=> store’un tüm uygulamaya etkisini göstermesini sağlayan ve uygulamanın etrafını sarmalayacak olan 
+               bir yapıdır.
+    index.js => de Elave Ediler ve App ni sarmalayar App də bütün Valideyin Birləşənləri Saxlayar sarmalayar
+                
+                const storeData = createStore( reducer,initialState )
+                <Provider store = {storeData} >
+                    <App/>
+                </Provider>
+
+    ------------------------------------------------- | CONNECT | --------------------------------------------------            
+    connect =>  component’leri store’a bağlamaya yarayan Objecdir .
+
+    *-> connect()(Component Name);
+    
+    - connect iki metod Alar mapStateToProps ve mapDispatchToProps -
+
+    => mapStateToProps -  Bize Globaldaki Statedeki Datani Yeni Storedeki Stateni Verer
+
+    mapDispatchToProps - action ni dispatch edib reducerimizi Tetikler Reducerde Action Type Görə Stateni güncəllər
+                         ve bize Yeni State Verer
+
+    *=> connect(mapStateToProps, mapDispatchToProps)(Component Name);
+
+    const mapStateToProps = (store) = > {
+        return {
+            ...store
+        }
+    } 
+
+    const mapStateToProps = (store) = > {
+        return {
+            key1: store.properity1,
+            key2: store.properity2
+        }
+    }
+
+    const mapDispatchToProps = (dispatch) = > {
+        return {
+            metodName: ()=> dispatch({type: "nese", payload: {......}});
+        }
+    } 
+
+    const mapDispatchToProps = (dispatch) = > {
+        return {
+            loginSuccesFn: (user)=> dispatch({type: "login_success", payload: {name: user.name,password: user.password}});
+        }
+    } 
+
+    Sonra ise gedib Componentimizde const {key1 , key2, metodName, loginSuccesFn } = props;
+
+    { 
+        dispatch üçün - useDispatch() Hooku var           const dispatch = useDispatch();
+        store deki datalar üçün useSelector() hook var    const state = useSelector( state => {...state} )
+    }
+    Bu iki Metod React Hooklara Mexsusdu 
+}
+
+------------------------------------------- |  import ve npm install | ------------------------------------------
+npm install redux ;
+npm install react-redux;
+npm install redux-thunk;
+
+import { Provider } from "react-redux";
+import { connect } from "react-redux";
+import { applyMiddleware } from "react-redux";
+
+import thunk from "redux-thunk";
+
+-> applyMiddleware Bu metod daxiline thunk alir parametre olaraq thunk da dispatch ederken araya girib 
+   bize action Firlar !!!!
+
+   store =  createStore(reducer, initialState, applyMiddleware(thunk))
+/*/
+    Thunk diye bir Redux middleware özelliği kullanıyoruz. Ve burada return ettiğimiz değer,
+    bir fonksiyon olursa, thunk devreye girip, bu fonksiyonu çağırıyor. 
+    Ve parametre olarak "dispatch" i vererek bu fonksiyonu çağırıyor.
+    O nedenle, loginHandler içinde döndüğümüz fonksiyona dispatch parametresini ekliyoruz.
+    ----------------------------------------------------------------------------------------
+    Bu loginHandler'ın döndüğü fonksiyon, redux tarafından çağırılıyor ve 
+    redux bunu yaparken parametre olarak, kendi dispatch fonksiyonunu parametre olarak veriyor.
+/*/
+
+ex  
+Component.jsx
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const username = "Elmar";
+    const password = "E2mar";
+
+    //onSignUp
+
+    const onSignUp = async (e) => {
+        e.preventDefault();
+
+        try {
+            await dispatch(signUpSuccessFn({ username, password }));
+            navigate("/");
+        } catch (error) { console.log(error) }
+        
+    };
+
+    // loginSuccessFn
+    const loginSuccessFn = (authUser) => {
+    return {
+            type: ACTION_TYPE.LOGIN_SUCCESS,
+            payload: {
+            username: authUser.username,
+            displayname: authUser.displayname,
+            image: authUser.image,
+            password: authUser.password,
+            },
+        };
+    };
+
+    // loginAuth
+
+    const loginAuth = (creds) => {
+        return axios.post("api/1.0/auth", {} ,{ auth: creds}  );
+    }
+
+    // signUp
+
+    const signUp = (body) => {
+        return axios.post("api/1.0/users", body );
+    }
+
+    // loginSuccessFnHandler
+
+    const loginSuccessFnHandler = (credentials) => {
+        return async (dispatch) => {
+            const response = await loginAuth(credentials);
+            dispatch(
+                loginSuccessFn({
+                    username: response.data.username,
+                    displayname: response.data.displayname,
+                    password: response.data.password,
+                    image: response.data.image,
+                    isLoggin: false,
+                })
+            );
+            return response;
+        };
+    };
+
+    // const signUpSuccessFn: (body: any) => (dispatch: any) => Promise<AxiosResponse<any, any>>
+
+    const signUpSuccessFn = (body) => {
+        return async (dispatch) => {
+            const response = await signUp(body);
+                dispatch(
+                    loginSuccessFnHandler({
+                        username: body.username,
+                        password: body.password
+                    })
+                );
+                return response;
+        };
+    };
+
+
+
