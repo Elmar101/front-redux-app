@@ -11,3 +11,7 @@ export const loginAuth = (creds) => {
 export const changeLanguage = (language) =>{
     axios.defaults.headers['accept-language'] = language;
 }
+
+export const getUsers = () => {
+    return axios.post("api/1.0/users");
+}
