@@ -17,7 +17,7 @@ export const storageData = (key) => {
     };
   
     if ( getDataFromStorage(key) ) {
-        try {  initialState = {...JSON.parse(storageData)}; }
+        try {  initialState = {...JSON.parse(getDataFromStorage(key))}; }
         catch(err){}
     }
 

@@ -1,4 +1,4 @@
-import { loginAuth } from "../api/apiCalls";
+import { loginAuth, setAuthorizationHeader } from "../api/apiCalls";
 import { ACTION_TYPE } from "./Constans";
 import { signUp } from "./../api/apiCalls";
 
@@ -30,11 +30,12 @@ export const logoutSuccessFn = (authUser) => {
 export const loginSuccessFnHandler = (credentials) => {
   return async (dispatch) => {
     const response = await loginAuth(credentials);
+    //setAuthorizationHeader(credentials); 
     dispatch(
       loginSuccessFn({
         username: response.data.username,
-        displayname: response.data.displayname,
-        password: response.data.password,
+        displayname: response.data.displayName,
+        password: response.data.password || credentials.password,
         image: response.data.image,
         isLoggin: false,
       })

@@ -43,7 +43,7 @@ export const useApiProgress = (props) => {
     registerInterceptors ();
 
     return () => unRegisterInterceptors();
-  })
+  },[])
 
   return pendingApiCall;
 }
