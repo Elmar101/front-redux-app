@@ -13,7 +13,10 @@ i18n.use(initReactI18next).init({
         'Password Repeat': 'Password Repeat',
         Login: 'Login',
         Logout: "Logout",
-        Unauthorized: 'Unauthorized'
+        Unauthorized: 'Unauthorized',
+        Users: 'Users',
+        'previous page': '< previous page ',
+        'next page': ' next page >'
       }
     },
     az: {
@@ -26,7 +29,10 @@ i18n.use(initReactI18next).init({
         'Password Repeat': 'Şifrəni Tekrarla',
         Login: 'Sisteme Gir',
         Logout: "Çıxış",
-        Unauthorized: 'Bele bir istifadeci yoxdur !!!'
+        Unauthorized: 'Bele bir istifadeci yoxdur !!!',
+        Users: 'İstifadeçiler',
+        'next page': 'sonraki >',
+        'previous page': '< evelki'
       }
     }
   },
