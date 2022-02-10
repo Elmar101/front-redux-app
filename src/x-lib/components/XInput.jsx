@@ -7,12 +7,13 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import FormHelperText from "@mui/material/FormHelperText";
 
 const XInput = (props) => {
-    const { value, error, label, onChange } = props;
+    const {defaultValue, value, error, label, onChange } = props;
     return (  
         <FormControl sx={{ m: 1, width: "100%" }} variant="standard" error = {error ? true : false}>
             <InputLabel htmlFor="input-with-icon-adornment"> { label } </InputLabel>
             <Input id="input-with-icon-adornment"
                 value={value}
+                defaultValue = {defaultValue}
                 onChange={ onChange }
                 startAdornment={
                     <InputAdornment position="start">
