@@ -1,18 +1,33 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useSelector } from 'react-redux';
-const ProfileCard = () => {
-  const {logginUserName} = useSelector(state => {
+import { useSelector } from "react-redux";
+import { ProfileImageWithDefault } from "../../../components/ProfileImageWithDefault";
+const ProfileCard = (props) => {
+  const { user } = props;
+  const { logginUserName } = useSelector((state) => {
     return {
-      logginUserName: state.username
-    }
-  })
-  const { username } = useParams();
+      logginUserName: state.username,
+    };
+  });
+ // const { username } = useParams();
 
-  let message = <i> WE CAN NOT EDIT</i>;
-  if (username === logginUserName) {
-    message = <i> WE CAN EDITS</i>;
-  }
-  return <div>{message}</div>;
+  return (
+    <div className="card text-center">
+      <div className="card-header">
+        <ProfileImageWithDefault
+          className="rounded-circle shadow"
+          width="200"
+          height="200"
+          alt={`${user.username} profile`}
+          image={user.propsimage}
+        />
+      </div>
+      <div className="card-body">
+        <h3>
+          {user.displayname}@{user.username}
+        </h3>
+      </div>
+    </div>
+  );
 };
 export default ProfileCard;

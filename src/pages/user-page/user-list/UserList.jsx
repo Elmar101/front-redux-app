@@ -3,6 +3,7 @@ import { getUsers } from "../../../api/apiCalls";
 import { useTranslation } from "react-i18next";
 import UserListItem from "./UserListItem";
 import { useApiProgress } from "./../../../shared/ApiProgress";
+import XSippiner from "../../../x-lib/components/XSippiner";
 const initialState = {
   page: {
     content: [],
@@ -15,6 +16,7 @@ const initialState = {
 };
 const UserList = () => {
   const pendingApiCall = useApiProgress("/api/1.0/users?page");
+  console.log("pendingApiCall", useApiProgress("/api/1.0/users?page"))
   const [state, setState] = useState(initialState);
   const { t } = useTranslation();
   useEffect(() => {
@@ -63,11 +65,7 @@ const UserList = () => {
   if (pendingApiCall) {
     console.log("spinner", pendingApiCall);
     actionDiv = (
-      <div className="d-flex justify-content-center">
-        <div className="spinner-border text-black-50">
-          <span className="sr-only"></span>
-        </div>
-      </div>
+      <XSippiner/>
     );
   }
   return (

@@ -13,7 +13,7 @@ export const useApiProgress = (props) => {
     let responseInterceptorReject; 
 
     const updateApiCallFor = (url, isBoolean) => {
-      if (url.startsWith(apiPath)) {
+      if (url) {
         setPendingApiCall( isBoolean );
       }
     };
