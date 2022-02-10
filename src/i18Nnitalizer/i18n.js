@@ -15,8 +15,9 @@ i18n.use(initReactI18next).init({
         Logout: "Logout",
         Unauthorized: 'Unauthorized',
         Users: 'Users',
-        'previous page': '< previous page ',
-        'next page': ' next page >'
+        Previous: '< previous page ',
+        Next: ' next page >',
+        'Load Failure': 'Load Failure'
       }
     },
     az: {
@@ -31,8 +32,9 @@ i18n.use(initReactI18next).init({
         Logout: "Çıxış",
         Unauthorized: 'Bele bir istifadeci yoxdur !!!',
         Users: 'İstifadeçiler',
-        'next page': 'sonraki >',
-        'previous page': '< evelki'
+        Next: 'sonraki >',
+        Previous: '< evelki',
+        'Load Failure': 'Liste yox'
       }
     }
   },

@@ -13,8 +13,8 @@ export const useApiProgress = (props) => {
     let responseInterceptorReject; 
 
     const updateApiCallFor = (url, isBoolean) => {
-      if (url === apiPath) {
-        setPendingApiCall( isBoolean);
+      if (url.startsWith(apiPath)) {
+        setPendingApiCall( isBoolean );
       }
     };
     const registerInterceptors = () => {
@@ -43,7 +43,7 @@ export const useApiProgress = (props) => {
     registerInterceptors ();
 
     return () => unRegisterInterceptors();
-  },[])
+  },[apiPath])
 
   return pendingApiCall;
 }

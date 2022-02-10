@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getUsers } from "../../../api/apiCalls";
 import { useTranslation } from "react-i18next";
 import UserListItem from "./UserListItem";
+import { useApiProgress } from "./../../../shared/ApiProgress";
 const initialState = {
   page: {
     content: [],
@@ -10,33 +11,65 @@ const initialState = {
     first: null,
     last: null,
   },
+  loadFailure: false
 };
 const UserList = () => {
-  const { t } = useTranslation();
+  const pendingApiCall = useApiProgress("/api/1.0/users?page");
   const [state, setState] = useState(initialState);
-
+  const { t } = useTranslation();
   useEffect(() => {
     loadUsers(state.page.number, state.page.size);
   }, []);
 
-  const onNextPage = () => {
+  const onClickNext = () => {
     const nextPage = state.page.number + 1;
     loadUsers(nextPage, state.page.size);
   };
 
-  const onPrevPage = () => {
+  const onClickPrevious = () => {
     const nextPage = state.page.number - 1;
     loadUsers(nextPage, state.page.size);
   };
 
-  function loadUsers(page, size) {
+  const loadUsers = (page, size) => {
+    setState({ ...state,loadFailure: false})
     getUsers(page, size)
       .then((response) => {
-        setState({ ...state, page: response.data });
+        setState({ ...state, page: response.data, loadFailure: false });
       })
-      .catch((error) => {});
-  }
+      .catch((error) => {
+        setState({ ...state,loadFailure: true})
+      });
+  };
 
+  let actionDiv = (
+    <div>
+      {state.page.first === false && (
+        <button className="btn btn-sm btn-light" onClick={onClickPrevious}>
+          {t("Previous")}
+        </button>
+      )}
+      {state.page.last === false && (
+        <button
+          className="btn btn-sm btn-light float-right"
+          onClick={onClickNext}
+        >
+          {t("Next")}
+        </button>
+      )}
+    </div>
+  );
+
+  if (pendingApiCall) {
+    console.log("spinner", pendingApiCall);
+    actionDiv = (
+      <div className="d-flex justify-content-center">
+        <div className="spinner-border text-black-50">
+          <span className="sr-only"></span>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="card">
       <h3 className="card-header text-center">{t("Users")}</h3>
@@ -45,21 +78,10 @@ const UserList = () => {
           <UserListItem key={user.username} user={user} />
         ))}
       </div>
-      <div>
-        {state.page.first === false && (
-          <button className="btn btn-sm btn-light float-left" onClick={onPrevPage}>
-            {t('previous page')}
-          </button>
-        )}
-        {state.page.last === false && (
-          <button
-            className="btn btn-sm btn-light float-right"
-            onClick={onNextPage}
-          >
-            {t('next page')}
-          </button>
-        )}
-      </div>
+      {actionDiv}
+      {state.loadFailure && (
+        <div className="text-center text-danger">{t("Load Failure")}</div>
+      )}
     </div>
   );
 };
