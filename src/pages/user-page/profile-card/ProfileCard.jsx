@@ -1,35 +1,47 @@
 import React, { useEffect, useState } from "react";
-/* import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux"; */
 import { ProfileImageWithDefault } from "../../../components/ProfileImageWithDefault";
-import { useTranslation } from 'react-i18next';
-import EditIcon from '@mui/icons-material/Edit';
-import SaveIcon from '@mui/icons-material/Save';
-import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
-import XInput from './../../../x-lib/components/XInput';
+import { useTranslation } from "react-i18next";
+import EditIcon from "@mui/icons-material/Edit";
+import SaveIcon from "@mui/icons-material/Save";
+import CancelPresentationIcon from "@mui/icons-material/CancelPresentation";
+import XInput from "./../../../x-lib/components/XInput";
+import { updateUser } from "../../../api/apiCalls";
+import { useApiProgress } from "../../../shared/ApiProgress";
+import { XButtonWithProgress } from "../../../x-lib/components/XButtonWithProgress";
 const ProfileCard = (props) => {
-  const { user } = props;
-  const {t} = useTranslation();
+  const [user, setUser] = useState({
+    username: null,
+    displayname: null,
+    image: null,
+  });
+  const { t } = useTranslation();
   const [inEditMode, setInEditMode] = useState(false);
   const [updatedDisplayName, setUpdatedDisplayName] = useState("");
-  /*   const { logginUserName } = useSelector((state) => {
-    return {
-      logginUserName: state.username,
-    };
-  }); */
-  // const { username } = useParams();
-  useEffect(()=>{
-    if(!inEditMode){
+  const pendingApiCall = useApiProgress({apiMethod:'put',apiPath: '/api/1.0/users/' + user.username});
+  useEffect(() => {
+    setUser({ ...props.user });
+  }, [props.user]);
+  useEffect(() => {
+    if (!inEditMode) {
       setUpdatedDisplayName(undefined);
-    }else {
+    } else {
       setUpdatedDisplayName(user.displayname);
     }
-    
-  },[inEditMode,user.displayname]);
+  }, [inEditMode, user.displayname]);
 
-  const onClickSave = () => {
-    console.log(updatedDisplayName)
-  }
+  const onClickSave = async () => {
+    try {
+      const response = await updateUser(user.username, updatedDisplayName);
+      setUser({
+        ...user,
+        displayname: response.data.displayName,
+        username: response.data.username,
+        image: response.data.image,
+      });
+      setInEditMode(false);
+    } catch (err) {}
+    console.log(updatedDisplayName);
+  };
   return (
     <div className="card text-center">
       <div className="card-header">
@@ -44,29 +56,45 @@ const ProfileCard = (props) => {
       <div className="card-body">
         {!inEditMode ? (
           <>
-          <h3>
-            {user.displayname}@{user.username}
-          </h3>
-          <button className="btn btn-success d-inline-flex" onClick={() => setInEditMode(true)}>
-          <EditIcon/> {t('Edit')}
-        </button>
-        </>
+            <h3>
+              {user.displayname}@{user.username}
+            </h3>
+            <button
+              className="btn btn-success d-inline-flex"
+              onClick={() => setInEditMode(true)}
+            >
+              <EditIcon /> {t("Edit")}
+            </button>
+          </>
         ) : (
           <div>
-          <XInput 
-            label={t('Change Display Name')} 
-            defaultValue = {user.displayname} 
-            onChange = {e=> setUpdatedDisplayName(e.target.value)}
-          />
-          <div>
-            <button className="btn btn-primary d-inline-flex" onClick={onClickSave}>
-              <SaveIcon/> {t('Save')}
-            </button>
-            <button className="btn btn-danger d-inline-flex ml-2" onClick={() => setInEditMode(false)}>
-             <CancelPresentationIcon/>{t('Cancel')}
-            </button>
+            <XInput
+              label={t("Change Display Name")}
+              defaultValue={user.displayname}
+              onChange={(e) => setUpdatedDisplayName(e.target.value)}
+            />
+            <div>
+              <XButtonWithProgress
+                  className="btn btn-primary d-inline-flex"
+                  onClick={onClickSave}
+                  pendingApiCall = {pendingApiCall} 
+                  disabled = {pendingApiCall}
+                  text = {(
+                    <>
+                    <SaveIcon /> {t("Save")}
+                    </>
+                  )}
+              />
+              <button
+                className="btn btn-danger d-inline-flex ml-2"
+                onClick={() => setInEditMode(false)}
+                disabled = {pendingApiCall}
+              >
+                <CancelPresentationIcon />
+                {t("Cancel")}
+              </button>
+            </div>
           </div>
-        </div>
         )}
       </div>
     </div>

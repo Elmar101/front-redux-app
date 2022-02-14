@@ -20,7 +20,7 @@ const initialState = {
   showPassword: false,
 };
 const LoginPage = () => {
-  const pendingApiCall = useApiProgress({apiPath: "api/1.0/auth"});
+  const pendingApiCall = useApiProgress({apiMethod: 'post',apiPath: "api/1.0/auth"});
 
   const dispatch = useDispatch();
   const navigate = useNavigate();

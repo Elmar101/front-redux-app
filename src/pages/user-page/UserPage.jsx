@@ -12,7 +12,7 @@ const UserPage = () => {
   const [user, setUser] = useState({username: '', displayname: '', image: null});
   const [notFound, setNotFound] = useState(false);
   const { username } = useParams();
-  const pendingApiCall = useApiProgress('/api/1.0/users/' + username);
+  const pendingApiCall = useApiProgress({apiMethod:'get',apiPath: '/api/1.0/users/' + username});
   useEffect(() => {
     getUser(username)
     .then(res=>{

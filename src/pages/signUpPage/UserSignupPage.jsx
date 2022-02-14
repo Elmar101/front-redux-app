@@ -17,8 +17,8 @@ const initialState = { username: "", displayname: "", password: "", passwordRepe
 const initialErrors = { username: "", displayname: "", password: "", passwordRepeat: "" };
 
 const UserSignupPage = () => {
-  const pendingApiCallSignUp  = useApiProgress({ apiPath: "api/1.0/users" }); 
-  const pendingApiCallLogin =  useApiProgress({apiPath: "api/1.0/auth"});
+  const pendingApiCallSignUp  = useApiProgress({ apiMethod: 'post', apiPath: "api/1.0/users" }); 
+  const pendingApiCallLogin =  useApiProgress({  apiMethod: 'post', apiPath: "api/1.0/auth"  });
   const pendingApiCall = pendingApiCallSignUp || pendingApiCallLogin;
   
   const dispatch = useDispatch();

@@ -5,31 +5,35 @@ import axios from "axios";
 }
 WrrapperComponent.displayName = `ApiProgres(${getDisplayName(Component)})`; */
 export const useApiProgress = (props) => {
-  const {apiPath} = props;
+  const {apiMethod,apiPath} = props;
+  console.log("api progress call oldu")
   const [pendingApiCall , setPendingApiCall ] = useState(false);
 
   useEffect(()=>{
     let requestInterceptorReject;
     let responseInterceptorReject; 
 
-    const updateApiCallFor = (url, isBoolean) => {
-      if (url) {
+    const updateApiCallFor = (url, method, isBoolean) => {
+      if (url.toString().startsWith(apiPath.toString()) && apiMethod.toLowerCase() === method.toLowerCase()) {
         setPendingApiCall( isBoolean );
       }
     };
     const registerInterceptors = () => {
       requestInterceptorReject = axios.interceptors.request.use((request) => {
-        updateApiCallFor(request.url, true);
+        const {url, method} = request;
+        updateApiCallFor(url,method, true);
         return request;
       });
 
       responseInterceptorReject = axios.interceptors.response.use(
         (response) => {
-          updateApiCallFor(response.config.url, false);
+          const {url, method} = response.config;
+          updateApiCallFor(url,method, false);
           return response;
         },
         (error) => {
-          updateApiCallFor(error.config.url, false);
+          const {url, method} = error.config;
+          updateApiCallFor(url,method, false);
           throw error;
         }
       );
@@ -43,7 +47,7 @@ export const useApiProgress = (props) => {
     registerInterceptors ();
 
     return () => unRegisterInterceptors();
-  },[apiPath])
+  },[apiPath,apiMethod])
 
   return pendingApiCall;
 }

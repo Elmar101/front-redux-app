@@ -15,8 +15,7 @@ const initialState = {
   loadFailure: false
 };
 const UserList = () => {
-  const pendingApiCall = useApiProgress("/api/1.0/users?page");
-  console.log("pendingApiCall", useApiProgress("/api/1.0/users?page"))
+  const pendingApiCall = useApiProgress({apiMethod: 'get', apiPath: "/api/1.0/users?page"});
   const [state, setState] = useState(initialState);
   const { t } = useTranslation();
   useEffect(() => {
