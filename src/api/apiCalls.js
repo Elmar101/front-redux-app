@@ -28,6 +28,6 @@ export const getUser = (username) => {
     return axios.get(`/api/1.0/users/${username}`);
 };
 
-export const updateUser = (username,  displayname) => {
-    return axios.put(`/api/1.0/users/${username}`, {displayName: displayname})
+export const updateUser = (username,  data) => {
+    return axios.put(`/api/1.0/users/${username}`, data )
 }

@@ -45,12 +45,13 @@ const ProfileCard = (props) => {
       setNewImage(undefined);
     } else {
       setUpdatedDisplayName(user.displayname);
+      setNewImage(user.image)
     }
-  }, [inEditMode, user.displayname]);
+  }, [inEditMode, user.displayname,user.image]);
 
   const onClickSave = async () => {
     try {
-      const response = await updateUser(user.username, updatedDisplayName);
+      const response = await updateUser(user.username, {displayName: updatedDisplayName  , image: newImage});
       setUser({
         ...user,
         displayname: response.data.displayName,
@@ -70,8 +71,7 @@ const ProfileCard = (props) => {
           width="200"
           height="200"
           alt={`${user.username} profile`}
-          image={user.propsimage}
-          tempimgage = {newImage}
+          image={newImage || user.image}
         />
       </div>
       <div className="card-body">
