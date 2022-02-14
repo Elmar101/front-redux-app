@@ -6,7 +6,7 @@ import axios from "axios";
 WrrapperComponent.displayName = `ApiProgres(${getDisplayName(Component)})`; */
 export const useApiProgress = (props) => {
   const {apiMethod,apiPath} = props;
-  console.log("api progress call oldu")
+  //console.log("api progress call oldu")
   const [pendingApiCall , setPendingApiCall ] = useState(false);
 
   useEffect(()=>{
