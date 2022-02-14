@@ -28,7 +28,7 @@ const UserList = () => {
       .catch((error) => {
         setState({ ...state,loadFailure: true})
       });
-  },[state]);
+  },[]);
   
   useEffect(() => {
     loadUsers(state.page.number, state.page.size);
