@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { getUsers } from "../../../api/apiCalls";
 import { useTranslation } from "react-i18next";
 import UserListItem from "./UserListItem";
@@ -18,9 +18,21 @@ const UserList = () => {
   const pendingApiCall = useApiProgress({apiMethod: 'get', apiPath: "/api/1.0/users?page"});
   const [state, setState] = useState(initialState);
   const { t } = useTranslation();
+
+  const loadUsers = useCallback( (page, size) => {
+    setState({ ...state,loadFailure: false})
+    getUsers(page, size)
+      .then((response) => {
+        setState({ ...state, page: response.data, loadFailure: false });
+      })
+      .catch((error) => {
+        setState({ ...state,loadFailure: true})
+      });
+  },[state]);
+  
   useEffect(() => {
     loadUsers(state.page.number, state.page.size);
-  }, []);
+  }, [state.page.number, state.page.size,loadUsers]);
 
   const onClickNext = () => {
     const nextPage = state.page.number + 1;
@@ -32,16 +44,7 @@ const UserList = () => {
     loadUsers(nextPage, state.page.size);
   };
 
-  const loadUsers = (page, size) => {
-    setState({ ...state,loadFailure: false})
-    getUsers(page, size)
-      .then((response) => {
-        setState({ ...state, page: response.data, loadFailure: false });
-      })
-      .catch((error) => {
-        setState({ ...state,loadFailure: true})
-      });
-  };
+
 
   let actionDiv = (
     <div>
@@ -85,15 +88,3 @@ const UserList = () => {
 
 export default UserList;
 
-/*   const onDelete = (index) => {
-      //console.log(index," - index ci" )
-      const users = [...state.users];
-      users.splice(index,1);
-      setState({ ...state, users: users })
-} */
-/*  {state.users.map( (user,index)=> (<UserItem key={user.username} user = {user} onDelete = {()=>onDelete(index)} /> ) )} */
-/*/
- state.users.map((user)=>(
-          <XTable users = {user.username} /> 
-       )) 
-/*/
