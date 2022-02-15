@@ -1,5 +1,6 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import { getDataFromStorage } from '../theme/utils/storage-utilts';
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -48,7 +49,7 @@ i18n.use(initReactI18next).init({
       }
     }
   },
-  fallbackLng: 'en',
+  fallbackLng: getDataFromStorage("language") || 'en',
   ns: ['translations'],
   defaultNS: 'translations',
   keySeparator: false,
