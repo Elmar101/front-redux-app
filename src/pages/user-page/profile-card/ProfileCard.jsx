@@ -20,17 +20,20 @@ const ProfileCard = (props) => {
   });
   const { t } = useTranslation();
   const { username } = useParams();
-  const { username: loggedInUsername } = useSelector((store) => ({
-    username: store.username,
-  }));
+  const { username: loggedInUsername } = useSelector((store) => ({ username: store.username }));
   const [inEditMode, setInEditMode] = useState(false);
   const [updatedDisplayName, setUpdatedDisplayName] = useState("");
   const [editable, setEditable] = useState(false);
   const [newImage, setNewImage] = useState(undefined);
+  const [validationErrors,setValidationErrors] = useState({displayName: undefined});
   const pendingApiCall = useApiProgress({
     apiMethod: "put",
     apiPath: "/api/1.0/users/" + user.username,
   });
+
+  useEffect(()=>{
+    setValidationErrors(prevValidationErrors => ({...prevValidationErrors, displayName: undefined}))
+  },[updatedDisplayName])
 
   useEffect(() => {
     setEditable(username === loggedInUsername)
@@ -62,7 +65,9 @@ const ProfileCard = (props) => {
         image: response.data.image,
       });
       setInEditMode(false);
-    } catch (err) { }
+    } catch (err) {
+      setValidationErrors(err.response.data.validationErrors)
+    }
   };
 
 
@@ -103,6 +108,7 @@ const ProfileCard = (props) => {
               label={t("Change Display Name")}
               defaultValue={user.displayname}
               onChange={(e) => setUpdatedDisplayName(e.target.value)}
+              error = {validationErrors.displayName}
             />
             <div>
               <div className="mb-3 mt-2">

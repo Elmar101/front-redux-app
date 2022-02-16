@@ -18,7 +18,7 @@ const UserPage = () => {
     .then(res=>{
       const data = res.data;
       setNotFound(false)
-      setUser({...user, username: data.username, displayname: data.displayName, image: data.image  });
+      setUser(prevUser=> ({...prevUser, username: data.username, displayname: data.displayName, image: data.image  }));
     })
     .catch(err=>{
       setNotFound(true);
