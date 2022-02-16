@@ -1,25 +1,19 @@
 import React from 'react'
 import Button from "@mui/material/Button";
+import XSippiner from './XSippiner';
+
 export const XButton = (props) => {
-    const { text , disabled , pendingApiCall, type , color, variant} = props;
+    const { text , disabled , pendingApiCall, type , color, variant,onClick} = props;
     return (
         <Button
-        type={type}
-        variant={variant}
-        color={color}
-        disabled={disabled}
+          type={type}
+          variant={variant}
+          color={color}
+          disabled={disabled}
+          onClick = {onClick}
       >
-        {pendingApiCall && (
-          <span className="spinner-border spinner-border-sm"></span>
-        )}
-        <span
-          style={{
-            paddingLeft: pendingApiCall && "16px",
-            paddingRight: pendingApiCall && "16px",
-          }}
-        >
+        {pendingApiCall && <XSippiner/>}
           {text}
-        </span>
       </Button>
     )
 }

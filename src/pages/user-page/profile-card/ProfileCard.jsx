@@ -7,10 +7,11 @@ import CancelPresentationIcon from "@mui/icons-material/CancelPresentation";
 import XInput from "./../../../x-lib/components/XInput";
 import { updateUser } from "../../../api/apiCalls";
 import { useApiProgress } from "../../../shared/ApiProgress";
-import { XButtonWithProgress } from "../../../x-lib/components/XButtonWithProgress";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { XFileReder } from "../../../x-lib/components/XFileReder";
+import { XButton } from "../../../x-lib/components/XButton";
+import  Box  from '@mui/material/Box';
 const ProfileCard = (props) => {
   const [user, setUser] = useState({
     username: null,
@@ -30,10 +31,10 @@ const ProfileCard = (props) => {
     apiMethod: "put",
     apiPath: "/api/1.0/users/" + user.username,
   });
-  
+
   useEffect(() => {
-    setEditable( username === loggedInUsername )
-  },[username , loggedInUsername]);
+    setEditable(username === loggedInUsername)
+  }, [username, loggedInUsername]);
 
   useEffect(() => {
     setUser({ ...props.user });
@@ -47,11 +48,13 @@ const ProfileCard = (props) => {
       setUpdatedDisplayName(user.displayname);
       setNewImage(user.image)
     }
-  }, [inEditMode, user.displayname,user.image]);
+  }, [inEditMode, user.displayname, user.image]);
 
   const onClickSave = async () => {
     try {
-      const response = await updateUser(user.username, {displayName: updatedDisplayName  , image: newImage});
+      const response = await updateUser(user.username, {
+        displayName: updatedDisplayName, image: newImage ? newImage.split(',')[1] : null
+      });
       setUser({
         ...user,
         displayname: response.data.displayName,
@@ -59,10 +62,10 @@ const ProfileCard = (props) => {
         image: response.data.image,
       });
       setInEditMode(false);
-    } catch (err) {}
+    } catch (err) { }
   };
 
- 
+
   return (
     <div className="card text-center">
       <div className="card-header">
@@ -71,7 +74,8 @@ const ProfileCard = (props) => {
           width="200"
           height="200"
           alt={`${user.username} profile`}
-          image={newImage || user.image}
+          image={user.image}
+          tempimage={newImage}
         />
       </div>
       <div className="card-body">
@@ -81,12 +85,16 @@ const ProfileCard = (props) => {
               {user.displayname}@{user.username}
             </h3>
             {editable && (
-              <button
-                className="btn btn-success d-inline-flex"
+              <XButton
+                variant="contained"
+                color="success"
                 onClick={() => setInEditMode(true)}
-              >
-                <EditIcon /> {t("Edit")}
-              </button>
+                text={(<>
+                  <EditIcon /> {t("Edit")}
+                </>
+                )}
+              />
+
             )}
           </>
         ) : (
@@ -97,11 +105,13 @@ const ProfileCard = (props) => {
               onChange={(e) => setUpdatedDisplayName(e.target.value)}
             />
             <div>
-            <div className="mb-3 mt-2">
-              <XFileReder className="form-control" setNewImage = {setNewImage} />
-            </div>
-            <XButtonWithProgress
-                className="btn btn-primary d-inline-flex"
+              <div className="mb-3 mt-2">
+                <XFileReder text = {t('UPLOAD FILE')}  setNewImage={setNewImage} />
+              </div>
+              <Box sx={{ '& > button': { m: 1 } }}>
+              <XButton
+                variant="contained"
+                color="primary"
                 onClick={onClickSave}
                 pendingApiCall={pendingApiCall}
                 disabled={pendingApiCall}
@@ -111,14 +121,19 @@ const ProfileCard = (props) => {
                   </>
                 }
               />
-              <button
-                className="btn btn-danger d-inline-flex ml-2"
+              <XButton
+                variant="contained"
+                color="secondary"
                 onClick={() => setInEditMode(false)}
                 disabled={pendingApiCall}
-              >
-                <CancelPresentationIcon />
-                {t("Cancel")}
-              </button>
+                text={
+                  <>
+                    <CancelPresentationIcon />
+                    {t("Cancel")}
+                  </>
+                }
+              />
+              </Box>
             </div>
           </div>
         )}

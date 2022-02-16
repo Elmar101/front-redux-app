@@ -23,7 +23,8 @@ i18n.use(initReactI18next).init({
         Edit: 'Edit',
         'Change Display Name': 'Change Display Name',
         Save: 'Save',
-        Cancel: 'Cancel'
+        Cancel: 'Cancel',
+        'UPLOAD FILE': 'UPLOAD FILE'
       }
     },
     az: {
@@ -45,7 +46,8 @@ i18n.use(initReactI18next).init({
         Edit: 'Düzenle',
         'Change Display Name': 'Görünür İsminizi Değiştirin',
         Save: 'Kaydet',
-        Cancel: 'İptal Et'
+        Cancel: 'İptal Et',
+        'UPLOAD FILE': 'DOSYA YÜKLƏ'
       }
     }
   },
