@@ -11,6 +11,7 @@ export const useApiProgress = (props) => {
     const updateApiCallFor = (url, method, isBoolean) => {
       if (url.toString().startsWith(apiPath.toString()) && apiMethod.toLowerCase() === method.toLowerCase()) {
         setPendingApiCall( isBoolean );
+        console.log(url.toString())
       }
     };
 

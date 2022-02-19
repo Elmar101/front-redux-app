@@ -17,7 +17,7 @@ const initialState = {
 const UserList = () => {
   const [state, setState] = useState(initialState);
   const { t } = useTranslation();
-  const pendingApiCall = useApiProgress({apiMethod: 'get', apiPath: "/api/1.0/users"});
+  const pendingApiCall = useApiProgress({apiMethod: 'get', apiPath: "api/1.0/users?page"});
   const loadUsers = useCallback((page, size) => {
     setState(state=> ({ ...state,loadFailure: false}))
     getUsers(page, size)
