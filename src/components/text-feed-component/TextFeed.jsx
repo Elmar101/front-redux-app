@@ -30,7 +30,7 @@ const TextFeed = () => {
   if (texts.content.length === 0) {
     return (
       <div className="alert alert-secondary text-center">
-        {pendingApiCall ? <XSippiner/> : t("There are no hoaxes")}
+        {pendingApiCall ? <XSippiner/> : t('There are no texts')}
       </div>
     );
   }
@@ -48,7 +48,7 @@ const TextFeed = () => {
             loadText(texts.number + 1) 
           }}
           >
-          { pendingApiCall ? <XSippiner/> : t('Load old hoaxes')}
+          { pendingApiCall ? <XSippiner/> : t('Load old texts')}
         </div>
       }
     </div>

@@ -27,7 +27,7 @@ i18n.use(initReactI18next).init({
         'UPLOAD FILE': 'UPLOAD FILE',
         'My Profile': 'My Profile',
         'Submit Message': 'Submit Message',
-        'There are no hoaxes': 'There are no hoaxes',
+        'There are no texts': 'There are no texts',
         'Load old texts': 'Load old texts'
       }
     },
@@ -54,7 +54,7 @@ i18n.use(initReactI18next).init({
         'UPLOAD FILE': 'DOSYA YÜKLƏ',
         'My Profile': 'Hesabim',
         'Submit Message': 'Messaji kayd et',
-        'There are no hoaxes': 'Text Tapilmadi',
+        'There are no texts': 'Text Tapilmadi',
         'Load old texts': 'Evvelki textleri getir'
       }
     }
