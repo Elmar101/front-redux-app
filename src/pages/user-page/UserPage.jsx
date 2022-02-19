@@ -3,10 +3,9 @@ import Container from "@mui/material/Container";
 import ProfileCard from "./profile-card/ProfileCard";
 import { getUser } from "../../api/apiCalls";
 import { useParams } from "react-router-dom";
-import NotFound from "../../components/NotFound";
+import NotFound from "../../components/not-found-component/NotFound";
 import { useApiProgress } from "../../shared/ApiProgress";
 import XSippiner from "../../x-lib/components/XSippiner";
-import LanguageSelector from "../../components/LanguageSelector";
 
 const UserPage = () => {
   const [user, setUser] = useState({username: '', displayname: '', image: null});
@@ -32,7 +31,6 @@ const UserPage = () => {
     <Container>
       { user.username && <ProfileCard user = {user} />}
       {notFound && <NotFound/>}
-      <LanguageSelector/>
     </Container>
   );
 };

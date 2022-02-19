@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ProfileImageWithDefault } from '../../../components/ProfileImageWithDefault';
+import { ProfileImageWithDefault } from '../../../components/profile-image-component/ProfileImageWithDefault';
 
 const UserListItem = props => {
   const { user } = props;

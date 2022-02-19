@@ -1,4 +1,4 @@
-import { loginAuth, setAuthorizationHeader } from "../api/apiCalls";
+import { loginAuth } from "../api/apiCalls";
 import { ACTION_TYPE } from "./Constans";
 import { signUp } from "./../api/apiCalls";
 
@@ -30,16 +30,15 @@ export const logoutSuccessFn = (authUser) => {
 export const loginSuccessFnHandler = (credentials) => {
   return async (dispatch) => {
     const response = await loginAuth(credentials);
-    //setAuthorizationHeader(credentials); 
-    dispatch(
-      loginSuccessFn({
-        username: response.data.username,
-        displayname: response.data.displayName,
-        password: response.data.password || credentials.password,
-        image: response.data.image,
-        isLoggin: false,
-      })
-    );
+          dispatch(
+            loginSuccessFn({
+              username: response.data.username,
+              displayname: response.data.displayName,
+              password: response.data.password || credentials.password,
+              image: response.data.image,
+              isLoggin: false,
+            })
+          );
     return response;
   };
 };
@@ -54,7 +53,7 @@ export const signUpSuccessFn = (body) => {
             password: body.password
           })
         );
-        return response;
+    return response;
   };
 };
 
@@ -67,3 +66,13 @@ O nedenle, loginHandler içinde döndüğümüz fonksiyona dispatch parametresin
 Bu loginHandler'ın döndüğü fonksiyon, redux tarafından çağırılıyor ve 
 redux bunu yaparken parametre olarak, kendi dispatch fonksiyonunu parametre olarak veriyor.
 /*/
+
+export const updateProfileSuccess = (data) => {
+  return {
+    type: ACTION_TYPE.UPDATE_PROFILE_SUCCESS,
+    payload: {
+      displayname: data.displayname,
+      image: data.image
+    }
+  }
+} 

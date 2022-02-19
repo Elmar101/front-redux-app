@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ProfileImageWithDefault } from "../../../components/ProfileImageWithDefault";
+import { ProfileImageWithDefault } from "../../../components/profile-image-component/ProfileImageWithDefault";
 import { useTranslation } from "react-i18next";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
@@ -8,16 +8,18 @@ import XInput from "./../../../x-lib/components/XInput";
 import { updateUser } from "../../../api/apiCalls";
 import { useApiProgress } from "../../../shared/ApiProgress";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { XFileReder } from "../../../x-lib/components/XFileReder";
 import { XButton } from "../../../x-lib/components/XButton";
 import  Box  from '@mui/material/Box';
+import { updateProfileSuccess } from "../../../redux/authAction";
 const ProfileCard = (props) => {
   const [user, setUser] = useState({
     username: null,
     displayname: null,
     image: null,
   });
+  const dispatch = useDispatch();
   const { t } = useTranslation();
   const { username } = useParams();
   const { username: loggedInUsername } = useSelector((store) => ({ username: store.username }));
@@ -25,7 +27,7 @@ const ProfileCard = (props) => {
   const [updatedDisplayName, setUpdatedDisplayName] = useState("");
   const [editable, setEditable] = useState(false);
   const [newImage, setNewImage] = useState(undefined);
-  const [validationErrors,setValidationErrors] = useState({displayName: undefined});
+  const [validationErrors,setValidationErrors] = useState({displayName: undefined, image: undefined});
   const pendingApiCall = useApiProgress({
     apiMethod: "put",
     apiPath: "/api/1.0/users/" + user.username,
@@ -35,18 +37,17 @@ const ProfileCard = (props) => {
     setValidationErrors(prevValidationErrors => ({...prevValidationErrors, displayName: undefined}))
   },[updatedDisplayName])
 
-  useEffect(() => {
-    setEditable(username === loggedInUsername)
-  }, [username, loggedInUsername]);
+  useEffect(()=>{
+    setValidationErrors(prevValidationErrors => ({...prevValidationErrors, image: undefined}))
+  },[newImage])
 
-  useEffect(() => {
-    setUser({ ...props.user });
-  }, [props.user]);
+  useEffect(() => { setEditable(username === loggedInUsername) }, [username, loggedInUsername]);
 
-  useEffect(() => {
-    if (!inEditMode) {
-      setUpdatedDisplayName(undefined);
-      setNewImage(undefined);
+  useEffect(() => { setUser({ ...props.user }); }, [props.user]);
+
+  useEffect(() => { if (!inEditMode) { 
+    setUpdatedDisplayName(undefined); 
+    setNewImage(undefined);
     } else {
       setUpdatedDisplayName(user.displayname);
       setNewImage(user.image)
@@ -65,6 +66,7 @@ const ProfileCard = (props) => {
         image: response.data.image,
       });
       setInEditMode(false);
+      dispatch( updateProfileSuccess({displayname: response.data.displayName, image: response.data.image}) );
     } catch (err) {
       setValidationErrors(err.response.data.validationErrors)
     }
@@ -112,7 +114,7 @@ const ProfileCard = (props) => {
             />
             <div>
               <div className="mb-3 mt-2">
-                <XFileReder text = {t('UPLOAD FILE')}  setNewImage={setNewImage} />
+                <XFileReder text = {t('UPLOAD FILE')}  setNewImage={setNewImage} error = {validationErrors.image}/>
               </div>
               <Box sx={{ '& > button': { m: 1 } }}>
               <XButton

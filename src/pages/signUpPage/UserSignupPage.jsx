@@ -4,12 +4,9 @@ import Container from "@mui/material/Container";
 import XInput from "../../x-lib/components/XInput";
 import XInputPassword from "../../x-lib/components/XInputPassword";
 import { useTranslation } from "react-i18next";
-import LanguageSelector from "../../components/LanguageSelector";
 import { XButton } from "../../x-lib/components/XButton";
-/* import { connect } from "react-redux"; */
 import { useDispatch } from "react-redux";
 import { signUpSuccessFn } from "../../redux/authAction";
-/* import { withApiProgress } from "../../shared/ApiProgress"; */
 import { useNavigate } from 'react-router-dom';
 import { useApiProgress } from './../../shared/ApiProgress';
 
@@ -131,10 +128,6 @@ const UserSignupPage = () => {
                 disabled={pendingApiCall}
                 pendingApiCall={pendingApiCall}
               />
-            </Container>
-
-            <Container maxWidth="sm">
-              <LanguageSelector />
             </Container>
           </Container>
         </Box>

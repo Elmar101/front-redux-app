@@ -30,6 +30,12 @@ export const authReducer = (state = {...defaultState}, action) => {
         isLoggin: false,
       };
     }
+
+    else if (action.type === ACTION_TYPE.UPDATE_PROFILE_SUCCESS){
+      const {displayname , image } = action.payload;
+      return { ...state, displayname, image } 
+    }
+    
     
     return state;
   };

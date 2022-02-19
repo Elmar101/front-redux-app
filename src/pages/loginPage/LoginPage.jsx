@@ -5,14 +5,11 @@ import Container from "@mui/material/Container";
 import Alert from "@mui/material/Alert";
 import { useTranslation } from "react-i18next";
 import XInputPassword from "../../x-lib/components/XInputPassword";
-import LanguageSelector from "../../components/LanguageSelector";
-/* import {withApiProgress} from "../../shared/ApiProgress"; */
 import { XButton } from "../../x-lib/components/XButton";
-import { useNavigate } from 'react-router-dom';
-/* import {connect} from "react-redux"; */
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginSuccessFnHandler } from "../../redux/authAction";
-import { useApiProgress } from './../../shared/ApiProgress';
+import { useApiProgress } from "./../../shared/ApiProgress";
 const initialState = {
   username: "",
   password: "",
@@ -20,13 +17,16 @@ const initialState = {
   showPassword: false,
 };
 const LoginPage = () => {
-  const pendingApiCall = useApiProgress({apiMethod: 'post',apiPath: "api/1.0/auth"});
+  const pendingApiCall = useApiProgress({
+    apiMethod: "post",
+    apiPath: "api/1.0/auth",
+  });
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [state, setState] = useState(initialState);
-  
+
   const buttonDisabled = !(state.password && state.username);
 
   const handleChange = (prop) => (event) => {
@@ -53,10 +53,15 @@ const LoginPage = () => {
     event.preventDefault();
     setState({ ...state, error: null });
     try {
-      await dispatch( loginSuccessFnHandler({ username: state.username, password: state.password }) );
+      await dispatch(
+        loginSuccessFnHandler({
+          username: state.username,
+          password: state.password,
+        })
+      );
       navigate("/");
-    }catch(err){
-      setState({ ...state, error: err.response.data.message })
+    } catch (err) {
+      setState({ ...state, error: err.response.data.message });
     }
   };
 
@@ -93,14 +98,10 @@ const LoginPage = () => {
                 type="submit"
                 variant="contained"
                 color="primary"
-                text = {t("Login")}
+                text={t("Login")}
                 disabled={buttonDisabled || pendingApiCall}
-                pendingApiCall = {pendingApiCall}
+                pendingApiCall={pendingApiCall}
               />
-            </Container>
-
-            <Container maxWidth="sm">
-              <LanguageSelector />
             </Container>
           </Container>
         </Box>
@@ -109,12 +110,10 @@ const LoginPage = () => {
   );
 };
 
-
 export default LoginPage;
 
 /* const LogginWithApiProgress = withApiProgress(LoginPage, "api/1.0/auth");
 export default LogginWithApiProgress; */
-
 
 /* const mapDispatchToProps = ( dispatch ) => {
   return {
@@ -123,9 +122,7 @@ export default LogginWithApiProgress; */
 } 
 export default connect(  null , mapDispatchToProps )(LogginWithApiProgress); */
 
-
-
- /* loginAuth({ username: state.username, password: state.password })
+/* loginAuth({ username: state.username, password: state.password })
     .then(response => {
       dispatch({
         username: response.data.username,

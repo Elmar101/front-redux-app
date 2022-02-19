@@ -31,3 +31,11 @@ export const getUser = (username) => {
 export const updateUser = (username,  data) => {
     return axios.put(`/api/1.0/users/${username}`, data )
 }
+
+export const setPostText = (text) => {
+    return axios.post("api/1.0/texts", {content: text} );
+}
+
+export const getPostTexts = (page) => {
+    return axios.get('/api/1.0/texts?page=' + page); 
+}

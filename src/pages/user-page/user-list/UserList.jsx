@@ -15,10 +15,9 @@ const initialState = {
   loadFailure: false
 };
 const UserList = () => {
-  const pendingApiCall = useApiProgress({apiMethod: 'get', apiPath: "/api/1.0/users?page"});
   const [state, setState] = useState(initialState);
   const { t } = useTranslation();
-
+  const pendingApiCall = useApiProgress({apiMethod: 'get', apiPath: "/api/1.0/users"});
   const loadUsers = useCallback((page, size) => {
     setState(state=> ({ ...state,loadFailure: false}))
     getUsers(page, size)
@@ -63,9 +62,9 @@ const UserList = () => {
       )}
     </div>
   );
-
+  console.log(pendingApiCall)
   if (pendingApiCall) {
-    console.log("spinner", pendingApiCall);
+    console.log(pendingApiCall)
     actionDiv = (
       <XSippiner/>
     );

@@ -24,7 +24,11 @@ i18n.use(initReactI18next).init({
         'Change Display Name': 'Change Display Name',
         Save: 'Save',
         Cancel: 'Cancel',
-        'UPLOAD FILE': 'UPLOAD FILE'
+        'UPLOAD FILE': 'UPLOAD FILE',
+        'My Profile': 'My Profile',
+        'Submit Message': 'Submit Message',
+        'There are no hoaxes': 'There are no hoaxes',
+        'Load old texts': 'Load old texts'
       }
     },
     az: {
@@ -47,7 +51,11 @@ i18n.use(initReactI18next).init({
         'Change Display Name': 'Görünür İsminizi Değiştirin',
         Save: 'Kaydet',
         Cancel: 'İptal Et',
-        'UPLOAD FILE': 'DOSYA YÜKLƏ'
+        'UPLOAD FILE': 'DOSYA YÜKLƏ',
+        'My Profile': 'Hesabim',
+        'Submit Message': 'Messaji kayd et',
+        'There are no hoaxes': 'Text Tapilmadi',
+        'Load old texts': 'Evvelki textleri getir'
       }
     }
   },
