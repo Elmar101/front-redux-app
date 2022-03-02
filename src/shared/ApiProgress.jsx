@@ -1,7 +1,7 @@
 import {useState,useEffect} from "react";
 import axios from "axios";
 export const useApiProgress = (props) => {
-  const {apiMethod,apiPath} = props;
+  const {apiMethod,apiPath , strickPath} = props;
   const [pendingApiCall , setPendingApiCall ] = useState(false);
 
   useEffect(()=>{
@@ -9,9 +9,14 @@ export const useApiProgress = (props) => {
     let responseInterceptorReject; 
 
     const updateApiCallFor = (url, method, isBoolean) => {
-      if (url.toString().startsWith(apiPath.toString()) && apiMethod.toLowerCase() === method.toLowerCase()) {
+      if(method !== apiMethod){
+        return ;
+      }
+      if(strickPath && url === apiPath){
         setPendingApiCall( isBoolean );
-        //console.log(url.toString())
+      }
+      else if (!strickPath && url.toString().startsWith(apiPath.toString())) {
+        setPendingApiCall( isBoolean );
       }
     };
 
@@ -44,7 +49,7 @@ export const useApiProgress = (props) => {
     registerInterceptors ();
 
     return () => unRegisterInterceptors();
-  },[apiPath,apiMethod])
+  },[apiPath,apiMethod,strickPath])
 
   return pendingApiCall;
 }

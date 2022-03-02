@@ -1,15 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import Stack from "@mui/material/Stack";
-
+import { postTextAttachment } from "../../api/apiCalls";
 const Input = styled("input")({
   display: "none",
 });
 
-export const XFileReder = (props) => {
-  const { setNewImage, text, error } = props;
+export const XFileUploadReader = (props) => {
+  const { text, error ,setNewImage,onSetAttachmentId} = props;
 
   const onFileChange = (event) => {
     if (event.target.files.length < 1) {
@@ -19,10 +19,19 @@ export const XFileReder = (props) => {
     const fileRider = new FileReader();
     fileRider.onloadend = () => {
       setNewImage(fileRider.result);
+      uploadFile(file);
     };
     fileRider.readAsDataURL(file);
   };
-  return (
+
+  const uploadFile = async (file) => {
+    const attachment = new FormData();
+    attachment.append('file', file);
+    const response = await postTextAttachment(attachment);
+    onSetAttachmentId(response.data.id)
+  }
+  
+  return ( 
     <>
       <Stack direction="row" alignItems="center" spacing={2}>
         <label htmlFor="contained-button-file">

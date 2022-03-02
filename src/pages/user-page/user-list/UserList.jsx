@@ -62,9 +62,7 @@ const UserList = () => {
       )}
     </div>
   );
-  console.log(pendingApiCall)
   if (pendingApiCall) {
-    console.log(pendingApiCall)
     actionDiv = (
       <XSippiner/>
     );

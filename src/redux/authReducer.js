@@ -10,7 +10,6 @@ const defaultState = {
 
 export const authReducer = (state = {...defaultState}, action) => {
     if (action.type === ACTION_TYPE.LOGIN_SUCCESS) {
-      //console.log("action payload",action.payload)
         return {
           ...state,
           username: action.payload.username,

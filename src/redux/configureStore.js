@@ -6,6 +6,7 @@ import { setAuthorizationHeader } from "../api/apiCalls";
 
 const configureStore = () => {
   let initialState = storageData("global-state");
+
   setAuthorizationHeader({username: initialState.username, password: initialState.password,isLoggin: initialState.isLoggin});
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   const store = createStore(

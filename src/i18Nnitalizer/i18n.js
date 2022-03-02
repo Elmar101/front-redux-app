@@ -1,6 +1,8 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { getDataFromStorage } from '../theme/utils/storage-utilts';
+import { timeageAz } from '../theme/utils/timeageAzJson-utilts';
+import { register } from 'timeago.js';
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -28,7 +30,8 @@ i18n.use(initReactI18next).init({
         'My Profile': 'My Profile',
         'Submit Message': 'Submit Message',
         'There are no texts': 'There are no texts',
-        'Load old texts': 'Load old texts'
+        'Load old texts': 'Load old texts',
+        'There are new hoaxes': 'There are new hoaxes'
       }
     },
     az: {
@@ -55,7 +58,8 @@ i18n.use(initReactI18next).init({
         'My Profile': 'Hesabim',
         'Submit Message': 'Messaji kayd et',
         'There are no texts': 'Text Tapilmadi',
-        'Load old texts': 'Evvelki textleri getir'
+        'Load old texts': 'Evvelki textleri getir',
+        'There are new hoaxes': 'Yeni Textler Var'
       }
     }
   },
@@ -72,4 +76,7 @@ i18n.use(initReactI18next).init({
   }
 });
 
+register('az',timeageAz);
+
 export default i18n;
+

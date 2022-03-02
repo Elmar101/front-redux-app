@@ -6,17 +6,16 @@ export const ProfileImageWithDefault = (props) => {
 
   let imageSource = defaultPicture;
   if (image) {
-    console.log("imageSource: ", image)
     imageSource = "images/" + image;
   }
   return (
     <img
       alt={`Profile`}
-      src={ imageSource || tempimage }
+      src={ imageSource ? imageSource : tempimage }
       {...props}
       onError={(event) => {
         event.target.src = defaultPicture;
       }}
     /> 
-  );
+  ); 
 }; 
