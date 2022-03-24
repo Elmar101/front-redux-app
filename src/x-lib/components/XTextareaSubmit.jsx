@@ -36,6 +36,7 @@ export const XTextareaSubmit = () => {
       setText("");
       setErrors(prevErr=> ({...prevErr, content: ''}));
       setNewImage();
+      setAttachmentId();
     }
     if(text){
         setErrors(prevErr=> ({...prevErr, content: ''}));

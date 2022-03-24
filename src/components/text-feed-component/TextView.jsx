@@ -6,20 +6,30 @@ import { useTranslation } from 'react-i18next';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { useSelector } from "react-redux";
 import { deleteTexts } from "../../api/apiCalls";
+import { XModal } from './../../x-lib/components/XModal';
+import { useApiProgress } from './../../shared/ApiProgress';
 
 export const TextView = (props) => {
   const { text , onDeleteTexts } = props;
   console.log(text.name)
   const loggedInUser = useSelector(store => store.username);
-  const { i18n } = useTranslation();
+  const { i18n,t } = useTranslation();
   const { user, content, timestamp,id,fileAttachment } = text;
   const { username, displayName, image } = user;
   const formatted = format(timestamp, i18n.language);
+  const [openModal, setOpenModal] = React.useState(false);
+  const pendingApiCall = useApiProgress({
+    apiMethod: "delete",
+    apiPath: `/api/1.0/texts/${id}`,
+    strickPath: true
+  })
   const onClickDeleteTexts = async () => {
-    await deleteTexts(id);
-          onDeleteTexts(id);
+   await deleteTexts(id);
+         onDeleteTexts(id);
+         setOpenModal(false) 
   }
   return ( 
+    <>
     <div className="card p-1">
       <div className="d-flex">
         <ProfileImageWithDefault
@@ -38,7 +48,7 @@ export const TextView = (props) => {
           </Link>
 
           {loggedInUser === username &&  (
-            <DeleteOutlineIcon className="btn-delete-link" onClick = {onClickDeleteTexts} />
+            <DeleteOutlineIcon className="btn-delete-link" onClick = {()=> setOpenModal(true)} />
           )}
          
         </div>
@@ -46,9 +56,35 @@ export const TextView = (props) => {
       <div className="pl-5">{content}</div>
       {fileAttachment && (
         <div className="pl-5">
-          <img className="img-fluid" src={`images/${fileAttachment.name}`} alt={content} />
+          {fileAttachment.fileType.startsWith('image') && (
+            <img className="img-fluid" src={'images/attachments/' + fileAttachment.name} alt={content} />
+          )}
+          {!fileAttachment.fileType.startsWith('image') && <strong>Hoax has unknown attachment</strong>}
         </div>
       )}
     </div>
+     <XModal 
+      open = {openModal} 
+      setOpen = {setOpenModal} 
+      onClickSave = {onClickDeleteTexts}
+      pendingApiCall = {pendingApiCall}
+      title = "Delete Text"
+      dangerText = "Delete Text"
+      message = {
+        (
+          <div>
+            <div>
+              <strong>
+              {t("Are you shure Delete Texts ?")}
+              </strong>
+            </div>
+            <span>
+                {content}
+              </span>
+          </div>
+        )
+      }
+      />
+     </>
   );
 };

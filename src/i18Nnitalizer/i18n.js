@@ -31,7 +31,13 @@ i18n.use(initReactI18next).init({
         'Submit Message': 'Submit Message',
         'There are no texts': 'There are no texts',
         'Load old texts': 'Load old texts',
-        'There are new hoaxes': 'There are new hoaxes'
+        'There are new hoaxes': 'There are new hoaxes',
+        'Delete Text': 'Delete Text',
+        'Are you shure Delete Texts ?' : 'Are you shure Delete Texts ?',
+        "Delete Account": "Delete Account",
+        "Are you shure Delete Your Acount ?": "Are you shure Delete Your Acount ?",
+        "Delete My Account": "Delete My Account"
+        
       }
     },
     az: {
@@ -59,7 +65,13 @@ i18n.use(initReactI18next).init({
         'Submit Message': 'Messaji kayd et',
         'There are no texts': 'Text Tapilmadi',
         'Load old texts': 'Evvelki textleri getir',
-        'There are new hoaxes': 'Yeni Textler Var'
+        'There are new hoaxes': 'Yeni Textler Var',
+        'Delete Text': `Text'i Sil`,
+        'Are you shure Delete Texts ?': `Text'i silmekden Eminmisiniz ? `,
+        "Delete Account": "Hesab Silinecek",
+        "Are you shure Delete Your Acount ?": "Hesabinizi Silmek Isdermisiniz",
+        "Delete My Account": "Hesabimi Sil"
+        
       }
     }
   },

@@ -8,13 +8,7 @@ export const getDataFromStorage = (key) => {
 
 export const storageData = (key) => {
    
-    let initialState = {
-      username: null,
-      displayname: null,
-      password: null,
-      image: null,
-      isLoggin: false,
-    };
+    let initialState = {};
   
     if ( getDataFromStorage(key) ) {
         try {  initialState = {...JSON.parse(getDataFromStorage(key))}; }

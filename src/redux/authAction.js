@@ -1,44 +1,47 @@
 import { loginAuth } from "../api/apiCalls";
 import { ACTION_TYPE } from "./Constans";
-import { signUp } from "./../api/apiCalls";
+import { signUp, logout } from "./../api/apiCalls";
 
 export const loginSuccessFn = (authUser) => {
+  console.log(authUser);
   return {
     type: ACTION_TYPE.LOGIN_SUCCESS,
     payload: {
-      username: authUser.username,
-      displayname: authUser.displayname,
-      image: authUser.image,
+      token: authUser.token,
+      username: authUser.user.username,
+      displayname: authUser.user.displayName,
+      image: authUser.user.image,
       password: authUser.password,
     },
   };
 };
 
 export const logoutSuccessFn = (authUser) => {
-  return {
-    type: ACTION_TYPE.LOGOUT_SUCCESS,
-    payload: {
-      username: authUser.username,
-      displayname: authUser.displayname,
-      password: authUser.password,
-      image: authUser.image,
-      isLoggin: authUser.isLoggin,
-    },
+  return async (dispatch) => {
+    const response = await logout();
+    dispatch({
+      type: ACTION_TYPE.LOGOUT_SUCCESS,
+      payload: {
+        username: authUser.username,
+        displayname: authUser.displayname,
+        password: authUser.password,
+        image: authUser.image,
+        isLoggin: authUser.isLoggin,
+      },
+    });
+    return response;
   };
 };
 
 export const loginSuccessFnHandler = (credentials) => {
   return async (dispatch) => {
     const response = await loginAuth(credentials);
-          dispatch(
-            loginSuccessFn({
-              username: response.data.username,
-              displayname: response.data.displayName,
-              password: response.data.password || credentials.password,
-              image: response.data.image,
-              isLoggin: false,
-            })
-          );
+    dispatch(
+      loginSuccessFn({
+        ...response.data,
+        password: response.data.password || credentials.password,
+      })
+    );
     return response;
   };
 };
@@ -46,13 +49,13 @@ export const loginSuccessFnHandler = (credentials) => {
 export const signUpSuccessFn = (body) => {
   return async (dispatch) => {
     const response = await signUp(body);
-        dispatch(
-          loginSuccessFnHandler({
-            username: body.username,
-            displayname: body.displayname,
-            password: body.password
-          })
-        );
+    dispatch(
+      loginSuccessFnHandler({
+        username: body.username,
+        displayname: body.displayname,
+        password: body.password,
+      })
+    );
     return response;
   };
 };
@@ -72,7 +75,7 @@ export const updateProfileSuccess = (data) => {
     type: ACTION_TYPE.UPDATE_PROFILE_SUCCESS,
     payload: {
       displayname: data.displayname,
-      image: data.image
-    }
-  }
-} 
+      image: data.image,
+    },
+  };
+};

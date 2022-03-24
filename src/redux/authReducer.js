@@ -12,6 +12,7 @@ export const authReducer = (state = {...defaultState}, action) => {
     if (action.type === ACTION_TYPE.LOGIN_SUCCESS) {
         return {
           ...state,
+          token: action.payload.token,
           username: action.payload.username,
           displayname: action.payload.displayname,
           password: action.payload.password,
@@ -22,6 +23,7 @@ export const authReducer = (state = {...defaultState}, action) => {
     else if (action.type === ACTION_TYPE.LOGOUT_SUCCESS) {
       return {
         ...state,
+        token: action.payload.token,
         username: action.payload.username,
         displayname: action.payload.displayname,
         password: action.payload.password,

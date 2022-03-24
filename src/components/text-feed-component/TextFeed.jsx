@@ -40,7 +40,7 @@ const TextFeed = () => {
   const newHoaxPath = username
     ? `/api/1.0/users/${username}/texts/${firstTextId}?direction=after`
     : `/api/1.0/texts/${firstTextId}?direction=after`;
-  const loadNewTextsProgress = useApiProgress({api: 'get',apiPath: newHoaxPath, strickPath: true});
+  const loadNewTextsProgress = useApiProgress({apiMetod: 'get', apiPath: newHoaxPath, strickPath: true});
  
   useEffect(() => {
     const loadText = () => {

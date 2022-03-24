@@ -6,13 +6,13 @@ export const XButton = (props) => {
     const { text , disabled , pendingApiCall, type , color, variant,onClick} = props;
     return (
         <Button
-          type={type}
-          variant={variant}
-          color={color}
+          type={type || "button"}
+          variant={variant || "contained"}
+          color={color || "primary"}
           disabled={disabled}
           onClick = {onClick}
       >
-        {pendingApiCall && <XSippiner/>}
+        {pendingApiCall && <XSippiner textColor = "text-light" />}
           {text}
       </Button>
     )
